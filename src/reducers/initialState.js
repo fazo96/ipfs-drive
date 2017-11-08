@@ -1,18 +1,15 @@
 export default {
-  fuelSavings: {
-    newMpg: '',
-    tradeMpg: '',
-    newPpg: '',
-    tradePpg: '',
-    milesDriven: '',
-    milesDrivenTimeframe: 'week',
-    displayResults: false,
-    dateModified: null,
-    necessaryDataIsProvidedToCalculateSavings: false,
-    savings: {
-      monthly: 0,
-      annual: 0,
-      threeYear: 0
-    }
+  loading: {
+    counter: 0
+  },
+  ipfs: {
+    path: null,
+    files: [
+      {
+        type: 'folder',
+        name: 'Music',
+        hash: 'testhash'
+      }
+    ]
   }
 };
