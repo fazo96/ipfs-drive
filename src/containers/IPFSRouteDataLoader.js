@@ -6,16 +6,14 @@ import { connect } from 'react-redux';
 
 class IPFSRouteDataLoader extends React.Component {
   componentWillReceiveProps (newProps) {
-    const match = newProps.match;
-    console.log(match)
-    if (match !== null) {
-      newProps.goTo(match.params.path);
+    const location = newProps.location;
+    if (location !== null) {
+      newProps.goTo(location.pathname.split('/').slice(2));
     }
   }
 
   componentDidMount () {
-    console.log(this.props.match);
-    this.props.goTo(this.props.match.params.path);
+    this.props.goTo(this.props.location.pathname.split('/').slice(2));
   }
 
   render () {

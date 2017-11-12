@@ -19,8 +19,8 @@ class App extends React.Component {
         <div>
           <NavBarContainer />
           <Switch>
-            <Route path="/ipfs/:path" component={IPFSRouteDataLoader} />
-            <Route exact path="/" render={redirectToEmptyObject} />
+            <Route path="/ipfs/" component={IPFSRouteDataLoader} />
+            <Route path="/" render={redirectToEmptyObject} />
             <Route component={NotFoundPage} />
           </Switch>
         </div>

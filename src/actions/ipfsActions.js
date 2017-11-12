@@ -1,5 +1,6 @@
 import * as types from '../constants/actionTypes';
 import IPFS from 'ipfs';
+import multihashes from 'multihashes';
 
 export function changeFiles(files) {
   return {
@@ -29,7 +30,8 @@ export function goTo(path) {
     for (const subpath of p.slice(1)) {
       const matches = files.filter(f => f.name === subpath);
       if (matches.length > 0) {
-        fullPath.push({ name: matches[0].name, hash: matches[0].hash });
+        hash = matches[0].hash;
+        fullPath.push({ name: matches[0].name, hash });
         files = await readDir(node, hash);
       } else {
         dispatch({type: 'ERROR'});
@@ -61,11 +63,12 @@ async function create () {
 }
 
 async function readDir (node, hash) {
+  console.log('readDir', hash);
   const links = await node.object.links(hash);
   return links.map(link => {
     return {
       name: link.name,
-      hash: link.multihash.toString(),
+      hash: multihashes.toB58String(link.multihash),
       size: link.size,
       type: '?'
     };
