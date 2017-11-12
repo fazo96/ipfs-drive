@@ -3,7 +3,7 @@ import reducer from './loadingReducer';
 import initialState from '../reducers/initialState';
 
 describe('Reducers::Loading', () => {
-  const getInitialState = () => initialState.loading;
+  const getInitialState = () => Object.assign({}, initialState.loading);
 
   it('should set initial state by default', () => {
     const action = { type: 'unknown' };
@@ -14,14 +14,14 @@ describe('Reducers::Loading', () => {
 
   it('should handle START_LOADING', () => {
     const action = { type: ActionTypes.START_LOADING };
-    const expected = Object.assign(getInitialState(), { loading: 1 });
+    const expected = Object.assign(getInitialState(), { counter: 1 });
 
     expect(reducer(getInitialState(), action)).toEqual(expected);
   });
 
   it('should handle DONE_LOADING', () => {
     const action = { type: ActionTypes.DONE_LOADING };
-    const state = Object.assign(getInitialState(), { loading: 1 });
+    const state = Object.assign(getInitialState(), { counter: 1 });
 
     expect(reducer(state, action)).toEqual(getInitialState());
   });

@@ -2,14 +2,11 @@ export default {
   loading: {
     counter: 0
   },
+  addModal: {
+    open: false
+  },
   ipfs: {
-    path: null,
-    files: [
-      {
-        type: 'folder',
-        name: 'Music',
-        hash: 'testhash'
-      }
-    ]
+    path: [],
+    files: []
   }
 };

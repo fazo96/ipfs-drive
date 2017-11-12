@@ -31,6 +31,7 @@
   "author": "Cory House",
   "license": "MIT",
   "dependencies": {
+    "ipfs": "0.26.0",
     "material-ui": "0.19.4",
     "material-ui-icons": "1.0.0-beta.17",
     "object-assign": "4.1.0",
