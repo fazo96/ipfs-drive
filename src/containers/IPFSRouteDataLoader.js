@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import IPFSFolderViewer from './IPFSFolderViewer';
+import FileManager from './FileManager';
 import { goTo } from '../actions/ipfsActions';
 import { connect } from 'react-redux';
 
@@ -10,7 +10,7 @@ class IPFSRouteDataLoader extends React.Component {
   }
 
   render () {
-    return <IPFSFolderViewer />;
+    return <FileManager />;
   }
 }
 

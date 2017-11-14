@@ -15,11 +15,14 @@ export function setPath(path) {
   return function(dispatch) {
     dispatch({type: types.SET_PATH, path });
     dispatch(push(pathToString(path)));
-  }
+  };
 }
 
 export function pathToString(path) {
-  return '/ipfs/' + [path[0].hash].concat(path.slice(1).map(p => p.name)).join('/');
+  console.log(path);
+  const pathString = '/ipfs/' + [path[0].hash].concat(path.slice(1).map(p => p.name)).join('/');
+  console.log(pathString);
+  return pathString;
 }
 
 export function init() {
@@ -39,20 +42,20 @@ async function getNode() {
 
 export function goTo(path) {
   return async function(dispatch) {
-    // TODO dispatch loading action
-    dispatch({type: types.CHANGE_FILES, files: []});
+    path = preparePath(path);
+    dispatch(setPath(path));
     const node = await getNode();
-    const p = preparePath(path);
-    let hash = p[0].hash;
-    let fullPath = [{ hash }];
+    let hash = path[0].hash;
     let files = await readDir(node, hash);
-    for (const subpath of p.slice(1)) {
+    const newPath = [Object.assign({}, path[0])];
+    for (const subpath of path.slice(1)) {
       if (subpath.hash) {
-        fullPath.push(subpath);
+        newPath.push(Object.assign({}, subpath));
       } else {
         const matches = files.filter(f => f.name === subpath.name);
         if (matches.length > 0) {
           hash = matches[0].hash;
+          newPath.push(Object.assign({}, { hash }));
           files = await readDir(node, hash);
         } else {
           dispatch({type: 'ERROR'});
@@ -60,7 +63,7 @@ export function goTo(path) {
         }
       }
     }
-    dispatch(setPath(fullPath));
+    dispatch(setPath(path));
     dispatch({type: types.CHANGE_FILES, files});
   };
 }
@@ -76,12 +79,11 @@ export function addTextFile(filename, content) {
     dispatch({type: 'ADDING_FILE'});
     const node = await getNode();
     // Add file to IPFS
-    const buffer = new Buffer(content);
     const newFileDagNode = await node.object.put({
       Links: [],
-      Data: buffer
+      Data: content
     });
-    const dagLink = await createDAGLink(filename, buffer.length, newFileDagNode.multihash);
+    const dagLink = await createDAGLink(filename, newFileDagNode.size, newFileDagNode.multihash);
     // build new path starting from current folder going up to root
     const reversedPath = getState().ipfs.path.reverse();
     const newPathReversed = [];
@@ -90,7 +92,7 @@ export function addTextFile(filename, content) {
       let newDAGNode = await node.object.patch.addLink(hash, dagLink);
       newPathReversed.push(Object.assign({}, folder, {
         hash: multihashes.toB58String(newDAGNode.multihash)
-      }))
+      }));
     }
     dispatch(goTo(newPathReversed.reverse()));
   };
@@ -112,7 +114,6 @@ function preparePath(path) {
 }
 
 async function create () {
-  console.log('creating');
   return await new Promise(fullfill => {
     const node = new IPFS({
       store: String(Math.random() + Date.now())
@@ -123,7 +124,6 @@ async function create () {
 }
 
 async function readDir (node, hash) {
-  console.log('readDir', hash);
   const links = await node.object.links(hash);
   return links.map(link => {
     return {

@@ -5,7 +5,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import NavBarContainer from '../containers/NavBarContainer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import NotFoundPage from './NotFoundPage';
-import IPFSRouteDataLoader from "../containers/IPFSRouteDataLoader";
+import FileManager from "../containers/FileManager";
 
 // This is a class-based component because the current
 // version of hot reloading won't hot reload a stateless
@@ -19,7 +19,7 @@ class App extends React.Component {
         <div>
           <NavBarContainer />
           <Switch>
-            <Route path="/ipfs/" component={IPFSRouteDataLoader} />
+            <Route path="/ipfs/" component={FileManager} />
             <Route path="/" render={redirectToEmptyObject} />
             <Route component={NotFoundPage} />
           </Switch>
