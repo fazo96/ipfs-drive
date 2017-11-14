@@ -10,4 +10,4 @@ export const SET_PATH = 'SET_PATH';
 
 export const ADDFILE_MODAL_OPEN = 'ADDFILE_MODAL_OPEN';
 export const ADDFILE_MODAL_CLOSE = 'ADDFILE_MODAL_CLOSE';
-export const ADD_FILE = 'ADD_FILE';
+export const ADDING_FILE = 'ADDING_FILE';

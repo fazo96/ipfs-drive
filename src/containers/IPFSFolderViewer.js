@@ -6,6 +6,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Add from '../components/Add';
 import { closeModal, openModal } from "../actions/addActions";
+import { addTextFile } from '../actions/ipfsActions';
 
 const IPFSFolderViewer = ({ files, addModalOpen, addFile, closeModal, openModal }) => {
     const buttonBarStyle = {
@@ -43,7 +44,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch){
   return {
-    addFile: file => dispatch({type:'ADD', file}),
+    addFile: (file) => dispatch(addTextFile(file.filename, file.content)),
     closeModal: () => dispatch(closeModal()),
     openModal: () => dispatch(openModal())
   };

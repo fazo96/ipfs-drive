@@ -5,13 +5,6 @@ import { goTo } from '../actions/ipfsActions';
 import { connect } from 'react-redux';
 
 class IPFSRouteDataLoader extends React.Component {
-  componentWillReceiveProps (newProps) {
-    const location = newProps.location;
-    if (location !== null) {
-      newProps.goTo(location.pathname.split('/').slice(2));
-    }
-  }
-
   componentDidMount () {
     this.props.goTo(this.props.location.pathname.split('/').slice(2));
   }

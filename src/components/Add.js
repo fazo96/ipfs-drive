@@ -13,12 +13,12 @@ class Add extends React.Component {
     };
   }
 
-  handleChangeFilename(filename) {
-    this.setState({ filename });
+  handleChangeFilename(event) {
+    this.setState({ filename: event.target.value });
   }
 
-  handleChangeFileContent(content) {
-    this.setState({ content });
+  handleChangeFileContent(event) {
+    this.setState({ content: event.target.value });
   }
 
   addFile() {
@@ -41,7 +41,7 @@ class Add extends React.Component {
         key="save"
         label="Save"
         primary={true}
-        onClick={this.addFile}
+        onClick={this.addFile.bind(this)}
       />,
     ];
 
@@ -52,8 +52,8 @@ class Add extends React.Component {
       open={open}
       onRequestClose={handleClose}
     >
-      <TextField floatingLabelText="File Name" name="filename" fullWidth={true} onChange={this.handleChangeFilename}/>
-      <TextField floatingLabelText="Content (Text)" name="content" fullWidth={true} rows={3} onChange={this.handleChangeFileContent}/>
+      <TextField floatingLabelText="File Name" name="filename" fullWidth={true} onChange={this.handleChangeFilename.bind(this)}/>
+      <TextField floatingLabelText="Content (Text)" name="content" fullWidth={true} rows={3} onChange={this.handleChangeFileContent.bind(this)}/>
     </Dialog>);
   }
 }
