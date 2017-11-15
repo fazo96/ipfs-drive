@@ -15,10 +15,11 @@ IPFS Drive will be a static web app to manage files and folders in IPFS. It will
 - [x] create new files from hash or text
 - [x] create folders
 - [x] download files on click
-- UI Polish: Favicon, toolbar
+- [x] UI: Favicon, toolbar
+- [x] link to github
 - IPNS support
 - delete, move, rename, copy files and folders
-- an help/about page with a link to github
+- an help/about page
 - check for updates
 
 ### Additional feature wishlist
