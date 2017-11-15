@@ -7,9 +7,9 @@ import { closeModal, openModal } from "../actions/addActions";
 import { goTo, goToRelative } from '../actions/ipfsNavigateActions';
 import { add } from '../actions/ipfsWriteActions';
 import LoadingIndicator from '../components/LoadingIndicator';
-import FileManagerButtons from '../components/FileManagerButtons';
 import { areStringPathsDifferent, pathToArrayOfObjects } from '../utils/path';
 import { downloadFromJs as download } from '../utils/download';
+import FileManagerToolbarContainer from '../containers/FileManagerToolbarContainer';
 
 class FileManager extends React.Component {
   componentDidMount() {
@@ -36,13 +36,12 @@ class FileManager extends React.Component {
       loading,
       add,
       closeModal,
-      openModal,
       location
     } = this.props;
     const showParent = pathToArrayOfObjects(location.pathname).length > 1;
     return (<div>
+      { loading ? <div/> : <FileManagerToolbarContainer /> }
       { loading ? <LoadingIndicator /> : <FolderViewer items={files} showParent={showParent} onClickItem={this.onClickitem.bind(this)}/> }
-      { loading ? <div/> : FileManagerButtons({ openModal }) }
       <Add open={addModalOpen} handleClose={closeModal} handleAdd={add}/>
     </div>);
   }
@@ -54,7 +53,6 @@ FileManager.propTypes = {
   addModalOpen: PropTypes.bool,
   add: PropTypes.func,
   closeModal: PropTypes.func,
-  openModal: PropTypes.func,
   loading: PropTypes.bool,
   goTo: PropTypes.func,
   goToRelative: PropTypes.func,
@@ -76,7 +74,6 @@ function mapDispatchToProps(dispatch){
     goToRelative: path => dispatch(goToRelative(path)),
     add: obj => dispatch(add(obj)),
     closeModal: () => dispatch(closeModal()),
-    openModal: () => dispatch(openModal()),
     goTo: path => dispatch(goTo(path))
   };
 }

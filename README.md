@@ -2,23 +2,24 @@
 
 A static web app to manage files and folders in IPFS. Works on any IPFS folder, and changes the hash when a modification is made.
 
-### Try it
+## Try it
 
 Not ready for initial release yet :(
 
-### Features for initial release
+## Features for initial release
 
 IPFS Drive will be a static web app to manage files and folders in IPFS. It will allow to open any folder and edit the contents. After each edit of course the hash will change.
 
-- navigate inside a folder and up the parent directory
-- quick sharing via URL
+- [x] navigate inside a folder and up the parent directory
+- [x] quick sharing via URL
+- [x] create new files from hash or text
+- [x] create folders
+- [x] download files on click
+- UI Polish: Favicon, toolbar
 - IPNS support
-- create new files from hash or text
-- create folders
 - delete, move, rename, copy files and folders
-- download files on click
-- ipfs favicon
-- an help/about page
+- an help/about page with a link to github
+- check for updates
 
 ### Additional feature wishlist
 
@@ -37,4 +38,3 @@ Ordered from most likely to be implemented to far fetched
 - download folder as archive
 - some way to guarantee availability using pins maybe
 - search
-

@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import NavBarContainer from '../containers/NavBarContainer';
+import TitleBar from '../components/TitleBar';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import NotFoundPage from './NotFoundPage';
 import FileManager from "../containers/FileManager";
@@ -17,7 +17,7 @@ class App extends React.Component {
     return (
       <MuiThemeProvider>
         <div>
-          <NavBarContainer />
+          <TitleBar />
           <Switch>
             <Route path="/ipfs/" component={FileManager} />
             <Route path="/" render={redirectToEmptyObject} />

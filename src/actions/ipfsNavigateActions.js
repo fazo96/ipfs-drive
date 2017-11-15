@@ -65,3 +65,17 @@ export function goToRelative(path) {
     }
   };
 }
+
+export function goToHashInPath(hash) {
+  return function (dispatch, getState) {
+    const path = getState().ipfs.path;
+    const newPath = [];
+    for (const item of path) {
+      newPath.push(item);
+      if (item.hash === hash) {
+        return dispatch(goTo(newPath));
+      }
+    }
+    // TODO not found?
+  };
+}
