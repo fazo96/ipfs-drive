@@ -1,7 +1,7 @@
 import {
   ADDFILE_MODAL_CLOSE,
   ADDFILE_MODAL_OPEN,
-  ADDING_FILE
+  ADDING_NODE
 } from '../constants/actionTypes';
 import initialState from './initialState';
 
@@ -17,7 +17,7 @@ export default function addModalReducer(state = initialState.addModal, action) {
       newState.open = false;
       return newState;
 
-    case ADDING_FILE:
+    case ADDING_NODE:
       newState.open = false;
       return newState;
 

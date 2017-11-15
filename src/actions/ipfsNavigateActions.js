@@ -3,6 +3,7 @@ import { push } from 'react-router-redux';
 import {
   pathToString,
   preparePath,
+  readLinks,
   readDir
 } from '../utils/ipfs';
 
@@ -18,7 +19,7 @@ export function goTo(path) {
     path = preparePath(path);
     dispatch(setPath(path));
     const newPath = [Object.assign({}, path[0])];
-    let files = await readDir(newPath[0].hash);
+    let files = await readLinks(newPath[0].hash);
     for (const subpath of path.slice(1)) {
       if (subpath.hash) {
         newPath.push(Object.assign({}, subpath));
@@ -26,10 +27,11 @@ export function goTo(path) {
         const matches = files.filter(f => f.name === subpath.name);
         const hash = matches[0].hash;
         newPath.push(Object.assign({}, subpath, { hash }));
-        files = await readDir(hash);
+        files = await readLinks(hash);
       }
     }
     dispatch(setPath(newPath));
+    files = await readDir(newPath[newPath.length-1].hash);
     dispatch({type: types.CHANGE_FILES, files});
   };
 }

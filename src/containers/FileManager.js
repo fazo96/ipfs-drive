@@ -5,9 +5,14 @@ import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
 import { closeModal, openModal } from "../actions/addActions";
 import { goTo } from '../actions/ipfsNavigateActions';
-import { addTextFile } from '../actions/ipfsWriteActions';
+import { add } from '../actions/ipfsWriteActions';
 import LoadingIndicator from '../components/LoadingIndicator';
 import FileManagerButtons from '../components/FileManagerButtons';
+
+const removeTrailingSlash = s => {
+  if(typeof s === 'string' && s.length > 0 && s[s.length-1] === '/') return s.slice(0, s.length-1);
+  return s;
+}
 
 class FileManager extends React.Component {
   componentDidMount() {
@@ -16,12 +21,20 @@ class FileManager extends React.Component {
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    const newPathName = removeTrailingSlash(newProps.location.pathname);
+    const oldPathName = removeTrailingSlash(this.props.location.pathname);
+    if (newPathName !== oldPathName) {
+      this.props.goTo(newPathName.split('/').slice(2));
+    }
+  }
+
   render () {
-    const { files, addModalOpen, loading, addFile, closeModal, openModal } = this.props;
+    const { files, addModalOpen, loading, add, closeModal, openModal } = this.props;
     return (<div>
       { loading ? <LoadingIndicator /> : <FolderViewer files={files}/> }
       { loading ? <div/> : FileManagerButtons({ openModal }) }
-      <Add open={addModalOpen} handleClose={closeModal} handleAddFile={addFile}/>
+      <Add open={addModalOpen} handleClose={closeModal} handleAdd={add}/>
     </div>);
   }
 }
@@ -30,7 +43,7 @@ FileManager.propTypes = {
   files: PropTypes.array,
   push: PropTypes.func,
   addModalOpen: PropTypes.bool,
-  addFile: PropTypes.func,
+  add: PropTypes.func,
   closeModal: PropTypes.func,
   openModal: PropTypes.func,
   loading: PropTypes.bool,
@@ -50,7 +63,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch){
   return {
-    addFile: file => dispatch(addTextFile(file.filename, file.content)),
+    add: obj => dispatch(add(obj)),
     closeModal: () => dispatch(closeModal()),
     openModal: () => dispatch(openModal()),
     goTo: path => dispatch(goTo(path))
