@@ -9,6 +9,7 @@ import { add } from '../actions/ipfsWriteActions';
 import LoadingIndicator from '../components/LoadingIndicator';
 import FileManagerButtons from '../components/FileManagerButtons';
 import { areStringPathsDifferent, pathToArrayOfObjects } from '../utils/path';
+import { downloadFromJs as download } from '../utils/download';
 
 class FileManager extends React.Component {
   componentDidMount() {
@@ -23,6 +24,11 @@ class FileManager extends React.Component {
     }
   }
 
+  onClickitem(item) {
+    if (item.folder) this.props.goToRelative(item.name);
+    else download(item);
+  }
+
   render () {
     const {
       files,
@@ -31,12 +37,11 @@ class FileManager extends React.Component {
       add,
       closeModal,
       openModal,
-      location,
-      goToRelative
+      location
     } = this.props;
     const showParent = pathToArrayOfObjects(location.pathname).length > 1;
     return (<div>
-      { loading ? <LoadingIndicator /> : <FolderViewer items={files} showParent={showParent} onClickItem={goToRelative}/> }
+      { loading ? <LoadingIndicator /> : <FolderViewer items={files} showParent={showParent} onClickItem={this.onClickitem.bind(this)}/> }
       { loading ? <div/> : FileManagerButtons({ openModal }) }
       <Add open={addModalOpen} handleClose={closeModal} handleAdd={add}/>
     </div>);

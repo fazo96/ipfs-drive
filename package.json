@@ -42,7 +42,8 @@
     "react-router-dom": "4.2.2",
     "react-router-redux": "5.0.0-alpha.6",
     "redux": "3.6.0",
-    "redux-thunk": "2.1.0"
+    "redux-thunk": "2.1.0",
+    "streamsaver": "1.0.1"
   },
   "devDependencies": {
     "autoprefixer": "7.1.4",

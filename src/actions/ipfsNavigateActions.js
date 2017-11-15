@@ -3,7 +3,6 @@ import { push } from 'react-router-redux';
 import {
   readLinks,
   readDir,
-  analyze,
   fileWithName
 } from '../utils/ipfs';
 import { arrayPathToString, pathToArrayOfObjects } from '../utils/path';
@@ -61,7 +60,8 @@ export function goToRelative(path) {
     if (newPath[newPath.length-1].folder) {
       dispatch(goTo(newPath));
     } else {
-      dispatch({type: 'DOWNLOAD'});
+      // TODO errors
+      dispatch({type:'ERROR'});
     }
   };
 }

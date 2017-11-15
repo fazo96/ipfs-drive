@@ -13,7 +13,7 @@ const FolderItem = ({ item, onClick }) => {
     rightIcon={<ActionInfo />}
     primaryText={item.name || '(No Name)'}
     secondaryText={'Size: ' + filesize(item.size)}
-    onClick={() => onClick(item.name)}
+    onClick={() => onClick(item)}
   />);
 };
 

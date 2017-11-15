@@ -10,7 +10,7 @@ const Parent = ({ onClick }) => (<ListItem
   rightIcon={<ActionInfo />}
   primaryText=".."
   secondaryText="Parent"
-  onClick={() => onClick('..')}
+  onClick={() => onClick({ name: '..', folder: true })}
 />);
 
 Parent.propTypes = {

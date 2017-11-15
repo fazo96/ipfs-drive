@@ -62,3 +62,21 @@ export function fileWithName(files, name) {
   if (matches.length === 1) return matches[0];
   return null;
 }
+
+export async function createItem(name, content) {
+  const item = {
+    path: name,
+    content
+  };
+  const ipfs = await getIPFS();
+  const result = await ipfs.files.add([item]);
+  if (result.length === 1) {
+    return {
+      name: result[0].path,
+      hash: result[0].hash,
+      folder: content === undefined
+    };
+  } else {
+    throw 'error';
+  }
+}

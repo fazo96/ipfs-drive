@@ -19,7 +19,7 @@ class Add extends React.Component {
       name: '',
       content: '',
       hash: '',
-      type: 'fromHash'
+      type: types.fromHash
     };
   }
 
@@ -56,6 +56,7 @@ class Add extends React.Component {
       default:
         return;
     }
+    this.setState({ hash: '', content: '' })
     this.props.handleAdd(obj);
   }
 
@@ -64,7 +65,7 @@ class Add extends React.Component {
       case types.plainText:
         return <TextField floatingLabelText="Content (Text)" name="content" fullWidth={true} rows={3} value={this.state.content} onChange={this.handleChangeFileContent.bind(this)}/>;
       case types.fromHash:
-        return <TextField floatingLabelText="Multihash" name="multihash" fullWidth={true} onChange={this.handleChangeHash.bind(this)}/>;
+        return <TextField floatingLabelText="Multihash" name="multihash" fullWidth={true} value={this.state.hash} onChange={this.handleChangeHash.bind(this)}/>;
       default:
         return <div/>;
     }
@@ -94,7 +95,7 @@ class Add extends React.Component {
       open={open}
       onRequestClose={handleClose}
     >
-      <TextField floatingLabelText="Name" name="name" fullWidth={true} onChange={this.handleChangeName.bind(this)}/>
+      <TextField floatingLabelText="Name" name="name" fullWidth={true} value={this.state.name} onChange={this.handleChangeName.bind(this)}/>
       <SelectField
         floatingLabelText="Type"
         value={this.state.type}

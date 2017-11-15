@@ -5,7 +5,7 @@ import {
   createDAGLink,
   readLinks,
   readDir,
-  folderData
+  createItem
 } from '../utils/ipfs';
 import { setPath } from './ipfsNavigateActions';
 
@@ -19,25 +19,15 @@ export function add(obj) {
 
 export function addEmptyFolder(name) {
   return async function(dispatch) {
-    const ipfs = await getIPFS();
-    // Add file to IPFS
-    const newFileDagNode = await ipfs.object.put({
-      Links: [],
-      Data: Buffer.from(folderData)
-    });
-    dispatch(addLinkFromDAGNode(name, newFileDagNode));
+    const newItem = await createItem(name);
+    dispatch(addLinkFromHash(name, newItem.hash));
   };
 }
 
 export function addTextFile(filename, content) {
   return async function(dispatch) {
-    const ipfs = await getIPFS();
-    // Add file to IPFS
-    const newFileDagNode = await ipfs.object.put({
-      Links: [],
-      Data: content
-    });
-    dispatch(addLinkFromDAGNode(filename, newFileDagNode));
+    const newItem = await createItem(name, Buffer.from(content));
+    dispatch(addLinkFromHash(filename, newItem.hash));
   };
 }
 
