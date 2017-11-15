@@ -4,7 +4,8 @@ import {connect} from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
 import { closeModal, openModal } from "../actions/addActions";
-import { addTextFile, goTo } from '../actions/ipfsActions';
+import { goTo } from '../actions/ipfsNavigateActions';
+import { addTextFile } from '../actions/ipfsWriteActions';
 import LoadingIndicator from '../components/LoadingIndicator';
 import FileManagerButtons from '../components/FileManagerButtons';
 
@@ -17,9 +18,6 @@ class FileManager extends React.Component {
 
   render () {
     const { files, addModalOpen, loading, addFile, closeModal, openModal } = this.props;
-    const circularProgressStyle = {
-      marginLeft: 'auto'
-    };
     return (<div>
       { loading ? <LoadingIndicator /> : <FolderViewer files={files}/> }
       { loading ? <div/> : FileManagerButtons({ openModal }) }
@@ -37,7 +35,8 @@ FileManager.propTypes = {
   openModal: PropTypes.func,
   loading: PropTypes.bool,
   goTo: PropTypes.func,
-  location: PropTypes.object
+  location: PropTypes.object,
+  path: PropTypes.arrayOf(PropTypes.object)
 };
 
 function mapStateToProps(state) {
