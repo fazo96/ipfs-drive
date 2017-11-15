@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
-import { closeModal, openModal } from "../actions/addActions";
+import { closeModal } from "../actions/addActions";
 import { goTo, goToRelative } from '../actions/ipfsNavigateActions';
 import { add } from '../actions/ipfsWriteActions';
 import LoadingIndicator from '../components/LoadingIndicator';
