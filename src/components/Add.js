@@ -26,8 +26,8 @@ class Add extends React.Component {
   handleChangeType(event, index, value) {
     this.setState({
       type: value,
-      content: value === types.plainText ? '' : null,
-      hash: value === types.fromHash ? '' : null
+      content: '',
+      hash: ''
     });
   }
 
@@ -52,6 +52,7 @@ class Add extends React.Component {
       case types.fromHash:
         obj.hash = this.state.hash;
         break;
+      case types.emptyFolder: break;
       default:
         return;
     }

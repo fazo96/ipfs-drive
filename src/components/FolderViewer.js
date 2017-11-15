@@ -1,36 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
+import { List } from 'material-ui/List';
+import FolderItem from './FolderItem';
+import Parent from './Parent';
 
-const FolderViewer = ({ files }) => {
-  return (<Table>
-    <TableHeader>
-      <TableRow>
-        <TableHeaderColumn>File</TableHeaderColumn>
-        <TableHeaderColumn>Status</TableHeaderColumn>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      { (files || []).map(file => {
-        return (
-          <TableRow key={file.hash}>
-            <TableRowColumn>{file.name}</TableRowColumn>
-            <TableRowColumn>{file.type}</TableRowColumn>
-          </TableRow>);
-      })}
-    </TableBody>
-  </Table>);
+const FolderViewer = ({ items, showParent, onClickItem }) => {
+  return (<List>
+    { showParent ? <Parent onClick={onClickItem} /> : <span/> }
+    { items.map(f => <FolderItem item={f} key={f.hash} onClick={onClickItem} />) }
+  </List>);
 };
 
 FolderViewer.propTypes = {
-  files: PropTypes.array
+  items: PropTypes.array,
+  showParent: PropTypes.bool,
+  onClickItem: PropTypes.func
 };
 
 export default FolderViewer;

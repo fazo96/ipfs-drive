@@ -4,35 +4,39 @@ import {connect} from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
 import { closeModal, openModal } from "../actions/addActions";
-import { goTo } from '../actions/ipfsNavigateActions';
+import { goTo, goToRelative } from '../actions/ipfsNavigateActions';
 import { add } from '../actions/ipfsWriteActions';
 import LoadingIndicator from '../components/LoadingIndicator';
 import FileManagerButtons from '../components/FileManagerButtons';
-
-const removeTrailingSlash = s => {
-  if(typeof s === 'string' && s.length > 0 && s[s.length-1] === '/') return s.slice(0, s.length-1);
-  return s;
-}
+import { areStringPathsDifferent, pathToArrayOfObjects } from '../utils/path';
 
 class FileManager extends React.Component {
   componentDidMount() {
     if (this.props.path.length === 0) {
-      this.props.goTo(this.props.location.pathname.split('/').slice(2));
+      this.props.goTo(this.props.location.pathname);
     }
   }
 
   componentWillReceiveProps(newProps) {
-    const newPathName = removeTrailingSlash(newProps.location.pathname);
-    const oldPathName = removeTrailingSlash(this.props.location.pathname);
-    if (newPathName !== oldPathName) {
-      this.props.goTo(newPathName.split('/').slice(2));
+    if (areStringPathsDifferent(newProps.location.pathname, this.props.location.pathname)) {
+      this.props.goTo(newProps.location.pathname);
     }
   }
 
   render () {
-    const { files, addModalOpen, loading, add, closeModal, openModal } = this.props;
+    const {
+      files,
+      addModalOpen,
+      loading,
+      add,
+      closeModal,
+      openModal,
+      location,
+      goToRelative
+    } = this.props;
+    const showParent = pathToArrayOfObjects(location.pathname).length > 1;
     return (<div>
-      { loading ? <LoadingIndicator /> : <FolderViewer files={files}/> }
+      { loading ? <LoadingIndicator /> : <FolderViewer items={files} showParent={showParent} onClickItem={goToRelative}/> }
       { loading ? <div/> : FileManagerButtons({ openModal }) }
       <Add open={addModalOpen} handleClose={closeModal} handleAdd={add}/>
     </div>);
@@ -48,6 +52,7 @@ FileManager.propTypes = {
   openModal: PropTypes.func,
   loading: PropTypes.bool,
   goTo: PropTypes.func,
+  goToRelative: PropTypes.func,
   location: PropTypes.object,
   path: PropTypes.arrayOf(PropTypes.object)
 };
@@ -63,6 +68,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch){
   return {
+    goToRelative: path => dispatch(goToRelative(path)),
     add: obj => dispatch(add(obj)),
     closeModal: () => dispatch(closeModal()),
     openModal: () => dispatch(openModal()),

@@ -2,7 +2,7 @@ import IPFS from 'ipfs';
 import dagPB from 'ipld-dag-pb';
 import multihashes from 'multihashes';
 
-export const folderData = new Uint8Array([8, 1]);
+export const folderData = Buffer.from(new Uint8Array([8, 1]));
 
 export function createDAGLink(name, length, hash) {
   return new Promise(fullfill => {
@@ -21,27 +21,6 @@ export async function create () {
     });
 
     node.on('ready', () => fullfill(node));
-  });
-}
-
-export function pathToString(path) {
-  const pathString = '/ipfs/' + [path[0].hash].concat(path.slice(1).map(p => p.name)).join('/');
-  return pathString;
-}
-
-export function preparePath(path) {
-  let p = path;
-  if (typeof path === 'string'){
-    p = p.split('/');
-  }
-  p = p.filter(s => !!s);
-  return p.map((obj, i) => {
-    if (typeof obj === 'string') {
-      if (i === 0) return { hash: obj };
-      return { name: obj };
-    } else {
-      return obj;
-    }
   });
 }
 
@@ -76,4 +55,10 @@ export async function analyze (link) {
     ...link,
     folder: isFolder(node)
   };
+}
+
+export function fileWithName(files, name) {
+  const matches = files.filter(f => f.name === name);
+  if (matches.length === 1) return matches[0];
+  return null;
 }

@@ -23,7 +23,7 @@ export function addEmptyFolder(name) {
     // Add file to IPFS
     const newFileDagNode = await ipfs.object.put({
       Links: [],
-      Data: Object.assign([], folderData)
+      Data: Buffer.from(folderData)
     });
     dispatch(addLinkFromDAGNode(name, newFileDagNode));
   };
