@@ -56,7 +56,7 @@ class Add extends React.Component {
       default:
         return;
     }
-    this.setState({ hash: '', content: '' })
+    this.setState({ hash: '', content: '' });
     this.props.handleAdd(obj);
   }
 
