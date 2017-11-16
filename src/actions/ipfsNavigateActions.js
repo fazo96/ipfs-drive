@@ -3,7 +3,8 @@ import { push } from 'react-router-redux';
 import {
   readLinks,
   readDir,
-  fileWithName
+  fileWithName,
+  analyze
 } from '../utils/ipfs';
 import { arrayPathToString, pathToArrayOfObjects } from '../utils/path';
 
@@ -18,9 +19,12 @@ export function goTo(path) {
   return async function(dispatch) {
     path = pathToArrayOfObjects(path);
     dispatch(setPath(path));
-    const newPath = [Object.assign({}, path[0])];
+    const hash = path[0].hash;
+    const analysis = await analyze({ hash });
+    const newPath = [Object.assign({}, path[0], analysis)];
     let files = await readLinks(newPath[0].hash);
-    for (const subpath of path.slice(1)) {
+    const subpaths = path.slice(1);
+    for (const subpath of subpaths) {
       if (subpath.hash) {
         newPath.push(Object.assign({}, subpath));
       } else {
@@ -28,7 +32,8 @@ export function goTo(path) {
         if(matches.length > 0) {
           newPath[newPath.length-1].folder = true;
           const hash = matches[0].hash;
-          newPath.push(Object.assign({}, subpath, { hash }));
+          const analysis = await analyze({ hash });
+          newPath.push(Object.assign({}, subpath, { hash }, analysis));
           files = await readLinks(hash);
         } else {
           // TODO errors
@@ -36,8 +41,9 @@ export function goTo(path) {
         }
       }
     }
+    const finalHash = newPath[newPath.length-1].hash;
     dispatch(setPath(newPath));
-    files = await readDir(newPath[newPath.length-1].hash);
+    files = await readDir(finalHash);
     dispatch({type: types.CHANGE_FILES, files});
   };
 }

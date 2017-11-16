@@ -53,6 +53,7 @@ export async function analyze (link) {
   const node = await ipfs.object.get(link.hash);
   return {
     ...link,
+    size: node.size,
     folder: isFolder(node)
   };
 }
