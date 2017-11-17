@@ -6,6 +6,7 @@ export const folderData = Buffer.from(new Uint8Array([8, 1]));
 
 export function createDAGLink(name, length, hash) {
   return new Promise(fullfill => {
+    // hash can be buffer or string
     dagPB.DAGLink.create(name, length, hash, (err, x) => fullfill(x));
   });
 }
@@ -80,4 +81,40 @@ export async function createItem(name, content) {
   } else {
     throw 'error';
   }
+}
+
+export async function buildNewPath(currentPath, newCurrentFolderDAGNode) {
+  // build new path starting from current folder (that has just changed) going up to root
+  const reversedPath = [ ...currentPath ].reverse();
+  const newPathReversed = [];
+  for (const index in reversedPath) {
+    const i = parseInt(index);
+    let folder = reversedPath[i];
+    const hash = multihashes.fromB58String(folder.hash);
+    let newDAGNode = null;
+    const ipfs = await getIPFS();
+    if (i === 0) {
+      // Current dir, just update from new dag node
+      newDAGNode = newCurrentFolderDAGNode;
+    } else {
+      // Not current dir, this directory is higher in the tree. Need to replace child link
+      const child = newPathReversed[i-1];
+      const childHash = multihashes.fromB58String(child.hash);
+      // find old link
+      const currentContents = await readLinks(folder.hash);
+      const oldChild = fileWithName(currentContents, child.name);
+      const oldDagLink = await createDAGLink(child.name, oldChild.size, multihashes.fromB58String(oldChild.hash));
+      // remove old link
+      newDAGNode = await ipfs.object.patch.rmLink(hash, oldDagLink);
+      // prepare new child link
+      const dagLink = await createDAGLink(child.name, child.size, childHash);
+      // add new child link
+      newDAGNode = await ipfs.object.patch.addLink(newDAGNode.multihash, dagLink);
+    }
+    newPathReversed.push(Object.assign({}, folder, {
+      hash: multihashes.toB58String(newDAGNode.multihash),
+      size: newDAGNode.size
+    }));
+  }
+  return newPathReversed.reverse();
 }

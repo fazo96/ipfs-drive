@@ -10,6 +10,7 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import { areStringPathsDifferent, pathToArrayOfObjects } from '../utils/path';
 import { downloadFromJs as download } from '../utils/download';
 import FileManagerToolbarContainer from '../containers/FileManagerToolbarContainer';
+import { cut, copy } from '../actions/folderItemActions';
 
 class FileManager extends React.Component {
   componentDidMount() {
@@ -36,12 +37,21 @@ class FileManager extends React.Component {
       loading,
       add,
       closeModal,
-      location
+      location,
+      handleCut,
+      handleCopy
     } = this.props;
     const showParent = pathToArrayOfObjects(location.pathname).length > 1;
+    const folderViewer = (<FolderViewer
+      items={files}
+      showParent={showParent}
+      onClickItem={this.onClickitem.bind(this)}
+      handleCut={handleCut}
+      handleCopy={handleCopy}
+    />);
     return (<div>
       { loading ? <div/> : <FileManagerToolbarContainer /> }
-      { loading ? <LoadingIndicator /> : <FolderViewer items={files} showParent={showParent} onClickItem={this.onClickitem.bind(this)}/> }
+      { loading ? <LoadingIndicator /> : folderViewer }
       <Add open={addModalOpen} handleClose={closeModal} handleAdd={add}/>
     </div>);
   }
@@ -57,7 +67,9 @@ FileManager.propTypes = {
   goTo: PropTypes.func,
   goToRelative: PropTypes.func,
   location: PropTypes.object,
-  path: PropTypes.arrayOf(PropTypes.object)
+  path: PropTypes.arrayOf(PropTypes.object),
+  handleCut: PropTypes.func,
+  handleCopy: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -74,7 +86,9 @@ function mapDispatchToProps(dispatch){
     goToRelative: path => dispatch(goToRelative(path)),
     add: obj => dispatch(add(obj)),
     closeModal: () => dispatch(closeModal()),
-    goTo: path => dispatch(goTo(path))
+    goTo: path => dispatch(goTo(path)),
+    handleCut: item => dispatch(cut(item)),
+    handleCopy: item => dispatch(copy(item))
   };
 }
 

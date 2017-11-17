@@ -16,7 +16,7 @@ const LoadingIndicator = () => {
         status="loading"
         style={{ display: 'block', position: 'relative'}}
       />
-  </div>)
-}
+  </div>);
+};
 
 export default LoadingIndicator;

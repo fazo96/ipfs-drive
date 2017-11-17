@@ -8,7 +8,6 @@ import {
 } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import ContentPaste from 'material-ui/svg-icons/content/content-paste';
-import FolderItem from './FolderItem';
 import Toggle from './Toggle';
 import filesize from 'filesize';
 
@@ -22,10 +21,9 @@ const FileManagerToolbar = props => {
   return (<Toolbar>
     <ToolbarGroup firstChild={true}>
       <ToolbarTitle text={filesize(size || 0)} style={{marginLeft: '22px'}}/>
-      { clipboardItem ? <FolderItem {...clipboardItem} /> : <span/> }
     </ToolbarGroup>
     <ToolbarGroup lastChild={true}>
-      <Toggle showIf={clipboardItem}>
+      <Toggle showIf={clipboardItem !== null}>
         <RaisedButton label="Paste" secondary={true} onClick={() => handlePaste(clipboardItem)} icon={<ContentPaste />}/>
         <ToolbarSeparator style={{margin:0}}/>
       </Toggle>

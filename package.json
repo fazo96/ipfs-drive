@@ -1,7 +1,7 @@
 {
-  "name": "react-slingshot",
-  "version": "7.0.0",
-  "description": "Starter kit for creating apps with React and Redux",
+  "name": "ipfs-drive",
+  "version": "0.1.0",
+  "description": "file manager for ipfs that runs in the browser",
   "engines": {
     "npm": ">=3"
   },

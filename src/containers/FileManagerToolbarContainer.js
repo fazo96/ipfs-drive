@@ -15,12 +15,15 @@ FileManagerToolbarContainer.propTypes = {
   loading: PropTypes.number,
   path: PropTypes.arrayOf(PropTypes.object),
   openAddModal: PropTypes.func,
-  onClickPathItem: PropTypes.func
+  onClickPathItem: PropTypes.func,
+  clipboardItem: PropTypes.object,
+  handlePaste: PropTypes.func
 };
 
 function mapStateToProps(state) {
   return {
     path: state.ipfs.path,
+    clipboardItem: state.ipfs.clipboardItem
   };
 }
 

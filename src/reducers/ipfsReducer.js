@@ -1,7 +1,10 @@
 import {
   CHANGE_FILES,
   CHANGE_DIRECTORY,
-  SET_PATH
+  SET_PATH,
+  CUT,
+  COPY,
+  PASTE
 } from '../constants/actionTypes';
 import initialState from './initialState';
 
@@ -10,6 +13,15 @@ export default function ipfsReducer(state = initialState.ipfs, action) {
   let newState = Object.assign({}, state);
 
   switch (action.type) {
+    case CUT:
+    case COPY:
+      newState.clipboardItem = action.item;
+      return newState;
+
+    case PASTE:
+      newState.clipboardItem = null;
+      return newState;
+
     case CHANGE_FILES:
       newState.files = action.files;
       newState.loading = false;

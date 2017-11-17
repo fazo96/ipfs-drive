@@ -3,9 +3,10 @@ import multihashes from 'multihashes';
 import {
   getIPFS,
   createDAGLink,
-  readLinks,
   readDir,
-  createItem
+  createItem,
+  buildNewPath,
+  fileWithName
 } from '../utils/ipfs';
 import { setPath } from './ipfsNavigateActions';
 
@@ -52,40 +53,33 @@ function addingNode(dagNode) {
 export function addLinkFromDAGNode(filename, newFileDagNode) {
   return async function(dispatch, getState) {
     dispatch(addingNode(newFileDagNode));
-    // build new path starting from current folder going up to root
-    const reversedPath = [ ...getState().ipfs.path ].reverse();
-    const newPathReversed = [];
-    for (const index in reversedPath) {
-      const i = parseInt(index);
-      const folder = reversedPath[i];
-      const hash = multihashes.fromB58String(folder.hash);
-      let newDAGNode = null;
-      const ipfs = await getIPFS();
-      if (i === 0) {
-        // Current dir. Add the new link
-        const dagLink = await createDAGLink(filename, newFileDagNode.size, newFileDagNode.multihash);
-        newDAGNode = await ipfs.object.patch.addLink(hash, dagLink);
-      } else {
-        // Not current dir, this directory is higher in the tree. Need to replace child link
-        const child = newPathReversed[i-1];
-        const childHash = multihashes.fromB58String(child.hash);
-        // find old link
-        const currentContents = await readLinks(folder.hash);
-        const oldChild = currentContents.filter(f => f.name === child.name)[0];
-        const oldDagLink = await createDAGLink(child.name, oldChild.size, multihashes.fromB58String(oldChild.hash));
-        // remove old link
-        newDAGNode = await ipfs.object.patch.rmLink(hash, oldDagLink);
-        // prepare new child link
-        const dagLink = await createDAGLink(child.name, oldChild.size + newFileDagNode.size, childHash); // TODO check size
-        // add new child link
-        newDAGNode = await ipfs.object.patch.addLink(newDAGNode.multihash, dagLink);
-      }
-      newPathReversed.push(Object.assign({}, folder, {
-        hash: multihashes.toB58String(newDAGNode.multihash)
-      }));
-    }
-    const newPath = newPathReversed.reverse();
+    // Add the new link to current dir
+    const dagLink = await createDAGLink(filename, newFileDagNode.size, newFileDagNode.multihash);
+    const ipfs = await getIPFS();
+    const path = getState().ipfs.path;
+    const newDAGNode = await ipfs.object.patch.addLink(path[path.length-1].hash, dagLink);
+    // Build new path
+    const newPath = await buildNewPath(path, newDAGNode);
     dispatch(setPath(newPath));
+    // Refresh files
+    const files = await readDir(newPath[newPath.length-1].hash);
+    dispatch({type: types.CHANGE_FILES, files});
+  };
+}
+
+export function removeLink(name) {
+  return async function(dispatch, getState) {
+    const ipfs = await getIPFS();
+    const path = getState().ipfs.path;
+    // Remove link from current dir
+    const hash = path[path.length-1].hash;
+    const link = fileWithName(getState().ipfs.files, name);
+    const dagLink = await createDAGLink(name, link.size, link.hash);
+    const newDAGNode = await ipfs.object.patch.rmLink(hash, dagLink);
+    // Build new path
+    const newPath = await buildNewPath(path, newDAGNode);
+    dispatch(setPath(newPath));
+    // Refresh files
     const files = await readDir(newPath[newPath.length-1].hash);
     dispatch({type: types.CHANGE_FILES, files});
   };
