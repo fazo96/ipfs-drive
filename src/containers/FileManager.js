@@ -10,7 +10,7 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import { areStringPathsDifferent, pathToArrayOfObjects } from '../utils/path';
 import { downloadFromJs as download } from '../utils/download';
 import FileManagerToolbarContainer from '../containers/FileManagerToolbarContainer';
-import { cut, copy } from '../actions/folderItemActions';
+import { cut, copy, remove } from '../actions/folderItemActions';
 
 class FileManager extends React.Component {
   componentDidMount() {
@@ -39,7 +39,8 @@ class FileManager extends React.Component {
       closeModal,
       location,
       handleCut,
-      handleCopy
+      handleCopy,
+      handleRemove
     } = this.props;
     const showParent = pathToArrayOfObjects(location.pathname).length > 1;
     const folderViewer = (<FolderViewer
@@ -48,6 +49,7 @@ class FileManager extends React.Component {
       onClickItem={this.onClickitem.bind(this)}
       handleCut={handleCut}
       handleCopy={handleCopy}
+      handleRemove={handleRemove}
     />);
     return (<div>
       { loading ? <div/> : <FileManagerToolbarContainer /> }
@@ -69,7 +71,8 @@ FileManager.propTypes = {
   location: PropTypes.object,
   path: PropTypes.arrayOf(PropTypes.object),
   handleCut: PropTypes.func,
-  handleCopy: PropTypes.func
+  handleCopy: PropTypes.func,
+  handleRemove: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -88,7 +91,8 @@ function mapDispatchToProps(dispatch){
     closeModal: () => dispatch(closeModal()),
     goTo: path => dispatch(goTo(path)),
     handleCut: item => dispatch(cut(item)),
-    handleCopy: item => dispatch(copy(item))
+    handleCopy: item => dispatch(copy(item)),
+    handleRemove: item => dispatch(remove(item))
   };
 }
 

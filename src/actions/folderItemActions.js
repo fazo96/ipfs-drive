@@ -30,3 +30,6 @@ export function paste() {
   };
 }
 
+export function remove(item) {
+  return removeLink(item.name);
+}

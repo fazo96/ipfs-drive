@@ -26,13 +26,13 @@ const iconButtonElement = (
   </IconButton>
 );
 
-const FolderItem = ({ item, onClick, handleCut, handleCopy, handleDelete, handleShare }) => {
+const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handleShare }) => {
   const rightIconButton = (<IconMenu iconButtonElement={iconButtonElement}>
     <MenuItem primaryText="Share" leftIcon={<ShareIcon />} onClick={() => handleShare(item)}/>
     <Divider />
     <MenuItem primaryText="Cut" leftIcon={<CutIcon />} onClick={() => handleCut(item)}/>
     <MenuItem primaryText="Copy" leftIcon={<CopyIcon />} onClick={() => handleCopy(item)}/>
-    <MenuItem primaryText="Delete" leftIcon={<DeleteIcon />} onClick={() => handleDelete(item)}/>
+    <MenuItem primaryText="Delete" leftIcon={<DeleteIcon />} onClick={() => handleRemove(item)}/>
   </IconMenu>);
   return (<ListItem
     leftAvatar={<Avatar icon={item.folder ? <FileFolder /> : <InsertDriveFile />} />}
@@ -48,7 +48,7 @@ FolderItem.propTypes = {
   onClick: PropTypes.func,
   handleCut: PropTypes.func,
   handleCopy: PropTypes.func,
-  handleDelete: PropTypes.func,
+  handleRemove: PropTypes.func,
   handleShare: PropTypes.func
 };
 
