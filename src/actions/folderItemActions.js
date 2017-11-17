@@ -1,5 +1,5 @@
 import * as types from '../constants/actionTypes';
-import { addLinkFromHash, removeLink } from './ipfsWriteActions';
+import { addLinkFromHash, removeLink, renameLink } from './ipfsWriteActions';
 
 export function share(item) {
   return {
@@ -32,4 +32,8 @@ export function paste() {
 
 export function remove(item) {
   return removeLink(item.name);
+}
+
+export function rename(item, newName) {
+  return renameLink(item, newName);
 }

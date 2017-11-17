@@ -12,6 +12,7 @@ import CopyIcon from 'material-ui/svg-icons/content/content-copy';
 import CutIcon from 'material-ui/svg-icons/content/content-cut';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import ShareIcon from 'material-ui/svg-icons/social/share';
+import RenameIcon from 'material-ui/svg-icons/editor/short-text';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
@@ -26,10 +27,11 @@ const iconButtonElement = (
   </IconButton>
 );
 
-const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handleShare }) => {
+const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handleShare, handleRename }) => {
   const rightIconButton = (<IconMenu iconButtonElement={iconButtonElement}>
     <MenuItem primaryText="Share" leftIcon={<ShareIcon />} onClick={() => handleShare(item)}/>
     <Divider />
+    <MenuItem primaryText="Rename" leftIcon={<RenameIcon />} onClick={() => handleRename(item)}/>
     <MenuItem primaryText="Cut" leftIcon={<CutIcon />} onClick={() => handleCut(item)}/>
     <MenuItem primaryText="Copy" leftIcon={<CopyIcon />} onClick={() => handleCopy(item)}/>
     <MenuItem primaryText="Delete" leftIcon={<DeleteIcon />} onClick={() => handleRemove(item)}/>
@@ -49,7 +51,8 @@ FolderItem.propTypes = {
   handleCut: PropTypes.func,
   handleCopy: PropTypes.func,
   handleRemove: PropTypes.func,
-  handleShare: PropTypes.func
+  handleShare: PropTypes.func,
+  handleRename: PropTypes.func
 };
 
 export default FolderItem;

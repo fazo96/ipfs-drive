@@ -84,3 +84,25 @@ export function removeLink(name) {
     dispatch({type: types.CHANGE_FILES, files});
   };
 }
+
+export function renameLink(name, newName) {
+  return async function(dispatch, getState) {
+    const ipfs = await getIPFS();
+    const path = getState().ipfs.path;
+    // Remove link from current dir
+    let hash = path[path.length-1].hash;
+    const link = fileWithName(getState().ipfs.files, name);
+    const oldDagLink = await createDAGLink(name, link.size, link.hash);
+    let newDAGNode = await ipfs.object.patch.rmLink(hash, oldDagLink);
+    hash = multihashes.toB58String(newDAGNode.multihash);
+    // Add new link (like old one but renamed)
+    const newDagLink = await createDAGLink(newName, link.size, hash);
+    newDAGNode = await ipfs.object.patch.addLink(hash, newDagLink);
+    // Build new path
+    const newPath = await buildNewPath(path, newDAGNode);
+    dispatch(setPath(newPath));
+    // Refresh files
+    const files = await readDir(newPath[newPath.length-1].hash);
+    dispatch({type: types.CHANGE_FILES, files});
+  };
+}
