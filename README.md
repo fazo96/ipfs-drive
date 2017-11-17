@@ -25,7 +25,9 @@ IPFS Drive will be a static web app to manage files and folders in IPFS. It will
 - [x] UI: Favicon, toolbar
 - [x] link to github
 - [x] delete, move, rename, copy files and folders
-- [ ] an help/about page
+- [x] ~~an help/about page~~ I guess github link counts
+- [x] remember the user's stuff
+- [ ] implement sharing via URLs
 - [ ] play nice when served from gateways
 - [ ] polish
 

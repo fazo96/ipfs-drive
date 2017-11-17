@@ -10,6 +10,7 @@ import { arrayPathToString, pathToArrayOfObjects } from '../utils/path';
 
 export function setPath(path) {
   return function(dispatch) {
+    if (path.length > 0) saveRootHash(path[0].hash);
     dispatch({type: types.SET_PATH, path });
     dispatch(push(arrayPathToString(path)));
   };
@@ -84,4 +85,14 @@ export function goToHashInPath(hash) {
     }
     // TODO not found?
   };
+}
+
+function saveRootHash(hash) {
+  window.localStorage.setItem('ipfsDriveRootHash', hash);
+}
+
+export const emptyHash = 'QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn';
+
+export function loadRootHash() {
+  return window.localStorage.getItem('ipfsDriveRootHash') || emptyHash;
 }

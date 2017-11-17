@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
-import { closeModal } from "../actions/addActions";
+import { openModal, closeModal } from "../actions/addActions";
 import { goTo, goToRelative } from '../actions/ipfsNavigateActions';
 import { add } from '../actions/ipfsWriteActions';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -54,7 +54,8 @@ class FileManager extends React.Component {
       addModalOpen,
       loading,
       add,
-      closeModal,
+      openAddModal,
+      closeAddModal,
       location,
       cut,
       copy,
@@ -70,12 +71,13 @@ class FileManager extends React.Component {
       handleCopy={copy}
       handleRemove={remove}
       handleRename={this.handleRename.bind(this)}
+      handleNewItem={openAddModal}
     />);
     return (<div>
       { loading ? <div/> : <FileManagerToolbarContainer /> }
       { loading ? <LoadingIndicator /> : folderViewer }
       <Rename open={renamingItem != null} handleChoose={this.rename.bind(this)} item={renamingItem} />
-      <Add open={addModalOpen} handleClose={closeModal} handleAdd={add}/>
+      <Add open={addModalOpen} handleClose={closeAddModal} handleAdd={add}/>
     </div>);
   }
 }
@@ -85,7 +87,8 @@ FileManager.propTypes = {
   push: PropTypes.func,
   addModalOpen: PropTypes.bool,
   add: PropTypes.func,
-  closeModal: PropTypes.func,
+  openAddModal: PropTypes.func,
+  closeAddModal: PropTypes.func,
   loading: PropTypes.bool,
   goTo: PropTypes.func,
   goToRelative: PropTypes.func,
@@ -110,12 +113,13 @@ function mapDispatchToProps(dispatch){
   return {
     goToRelative: path => dispatch(goToRelative(path)),
     add: obj => dispatch(add(obj)),
-    closeModal: () => dispatch(closeModal()),
+    closeAddModal: () => dispatch(closeModal()),
     goTo: path => dispatch(goTo(path)),
     cut: item => dispatch(cut(item)),
     copy: item => dispatch(copy(item)),
     remove: item => dispatch(remove(item)),
-    rename: (name, newName) => dispatch(rename(name, newName))
+    rename: (name, newName) => dispatch(rename(name, newName)),
+    openAddModal: () => dispatch(openModal()),
   };
 }
 

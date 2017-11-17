@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FileManagerToolBar from '../components/FileManagerToolbar';
 import { openModal } from '../actions/addActions';
-import { goToHashInPath } from '../actions/ipfsNavigateActions';
 import { paste } from '../actions/folderItemActions';
 
 const FileManagerToolbarContainer = (props) => {
@@ -15,7 +14,6 @@ FileManagerToolbarContainer.propTypes = {
   loading: PropTypes.number,
   path: PropTypes.arrayOf(PropTypes.object),
   openAddModal: PropTypes.func,
-  onClickPathItem: PropTypes.func,
   clipboardItem: PropTypes.object,
   handlePaste: PropTypes.func
 };
@@ -30,7 +28,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch){
   return {
     openAddModal: () => dispatch(openModal()),
-    onClickPathItem: hash => dispatch(goToHashInPath(hash)),
     handlePaste: item => dispatch(paste(item))
   };
 }
