@@ -28,10 +28,9 @@ IPFS Drive will be a static web app to manage files and folders in IPFS. It will
 - [x] link to github
 - [x] delete, move, rename, copy files and folders
 - [x] ~~an help/about page~~ I guess github link counts
-- [x] remember the user's stuff
+- [x] remember the user's last visited folder
+- [x] play nice when served from gateways
 - [ ] implement sharing via URLs
-- [ ] play nice when served from gateways
-- [ ] polish
 
 ### Additional feature wishlist
 
@@ -39,6 +38,7 @@ Ordered from high priority to maybe and far fetched
 
 - use redux saga and write tests
 - offline support with service workers
+- incremental js loading instead of 6 MB brick
 - some way to check for updates reliably
 - configurable download strategy: currently uses client side download with js-ipfs. It should also allow HTTP downloads via gateway. On firefox disable client side downloads
 - IPNS support (blocked due to IPNS not being implemented in js-ipfs)
