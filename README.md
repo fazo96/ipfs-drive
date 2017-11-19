@@ -4,7 +4,9 @@ A static web app to manage files and folders in IPFS. Works on any IPFS folder, 
 
 ## Try it
 
-Not ready for initial release yet :(
+This is a development build, with missing features and known issues detailed below:
+
+https://ipfs.io/ipfs/QmTKJKRSjk3FrcVL3SdiUXgA8pRQWDUXirJxy3NiWVH1GT
 
 ### Known Issues
 
