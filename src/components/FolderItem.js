@@ -16,6 +16,7 @@ import RenameIcon from 'material-ui/svg-icons/editor/short-text';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 const iconButtonElement = (
   <IconButton
@@ -28,8 +29,11 @@ const iconButtonElement = (
 );
 
 const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handleShare, handleRename }) => {
+  const url = window.location.href + '/' + item.name || '';
   const rightIconButton = (<IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem primaryText="Share" leftIcon={<ShareIcon />} onClick={() => handleShare(item)}/>
+    <CopyToClipboard text={url} onClick={() => handleShare(item)}>
+      <MenuItem primaryText="Share URL" leftIcon={<ShareIcon />} onClick={() => handleShare(item)}/>
+    </CopyToClipboard>
     <Divider />
     <MenuItem primaryText="Rename" leftIcon={<RenameIcon />} onClick={() => handleRename(item)}/>
     <MenuItem primaryText="Cut" leftIcon={<CutIcon />} onClick={() => handleCut(item)}/>
