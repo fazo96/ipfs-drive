@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ListItem } from 'material-ui/List';
-import FileFolder from 'material-ui/svg-icons/file/folder';
-import InsertDriveFile from 'material-ui/svg-icons/editor/insert-drive-file';
 import Avatar from 'material-ui/Avatar';
 import filesize from 'filesize';
 
 import IconButton from 'material-ui/IconButton';
+import FileFolderIcon from 'material-ui/svg-icons/file/folder';
+import InsertDriveFileIcon from 'material-ui/svg-icons/editor/insert-drive-file';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import CopyIcon from 'material-ui/svg-icons/content/content-copy';
 import CutIcon from 'material-ui/svg-icons/content/content-cut';
@@ -30,6 +31,10 @@ const iconButtonElement = (
 
 const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handleShare, handleRename }) => {
   const url = window.location.href + '/' + item.name || '';
+  const analyzed = item.size > 0 && typeof item.folder === 'boolean';
+  const leftIcon = analyzed ? (item.folder ? <FileFolderIcon /> : <InsertDriveFileIcon />) : <SettingsIcon />;
+  const secondaryText = analyzed ? 'Size: ' + filesize(item.size) : 'Searching IPFS...';
+  const onClickItem = analyzed ? (() => onClick(item)) : undefined;
   const rightIconButton = (<IconMenu iconButtonElement={iconButtonElement}>
     <CopyToClipboard text={url} onClick={() => handleShare(item)}>
       <MenuItem primaryText="Share URL" leftIcon={<ShareIcon />} onClick={() => handleShare(item)}/>
@@ -41,11 +46,11 @@ const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handle
     <MenuItem primaryText="Delete" leftIcon={<DeleteIcon />} onClick={() => handleRemove(item)}/>
   </IconMenu>);
   return (<ListItem
-    leftAvatar={<Avatar icon={item.folder ? <FileFolder /> : <InsertDriveFile />} />}
+    leftAvatar={<Avatar icon={leftIcon} />}
     rightIconButton={rightIconButton}
     primaryText={item.name || '(No Name)'}
-    secondaryText={'Size: ' + filesize(item.size)}
-    onClick={() => onClick(item)}
+    secondaryText={secondaryText}
+    onClick={onClickItem}
   />);
 };
 

@@ -88,7 +88,7 @@ class FileManager extends React.Component {
         open={notification.open}
         message={notification.message || ''}
         onRequestClose={clearNotification}
-        autohideDuration={4000}
+        autoHideDuration={4000}
       />
     </div>);
   }

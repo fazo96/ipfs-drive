@@ -3,12 +3,11 @@ import multihashes from 'multihashes';
 import {
   getIPFS,
   createDAGLink,
-  readDir,
   createItem,
   buildNewPath,
   fileWithName
 } from '../utils/ipfs';
-import { setPath } from './ipfsNavigateActions';
+import { setPath, readDir } from './ipfsNavigateActions';
 
 export function add(obj) {
   return async function(dispatch){
@@ -62,7 +61,7 @@ export function addLinkFromDAGNode(filename, newFileDagNode) {
     const newPath = await buildNewPath(path, newDAGNode);
     dispatch(setPath(newPath));
     // Refresh files
-    const files = await readDir(newPath[newPath.length-1].hash);
+    const files = await dispatch(readDir(newPath[newPath.length-1].hash));
     dispatch({type: types.CHANGE_FILES, files});
   };
 }
@@ -80,7 +79,7 @@ export function removeLink(name) {
     const newPath = await buildNewPath(path, newDAGNode);
     dispatch(setPath(newPath));
     // Refresh files
-    const files = await readDir(newPath[newPath.length-1].hash);
+    const files = await dispatch(readDir(newPath[newPath.length-1].hash));
     dispatch({type: types.CHANGE_FILES, files});
   };
 }
@@ -102,7 +101,7 @@ export function renameLink(name, newName) {
     const newPath = await buildNewPath(path, newDAGNode);
     dispatch(setPath(newPath));
     // Refresh files
-    const files = await readDir(newPath[newPath.length-1].hash);
+    const files = await dispatch(readDir(newPath[newPath.length-1].hash));
     dispatch({type: types.CHANGE_FILES, files});
   };
 }

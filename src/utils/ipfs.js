@@ -38,24 +38,13 @@ export async function readLinks (hash) {
   });
 }
 
-export async function readDir (hash) {
-  let links = await readLinks(hash);
-  return await Promise.all(links.map(async link => await analyze(link)));
-}
-
-function isFolder(dagNode) {
-  return dagNode.data.length === 2
-    && dagNode.data[0] === folderData[0]
-    && dagNode.data[1] === folderData[1];
-}
-
 export async function analyze (link) {
   const ipfs = await getIPFS();
-  const node = await ipfs.object.get(link.hash);
+  const stats = await ipfs.object.stat(link.hash);
   return {
     ...link,
-    size: node.size,
-    folder: isFolder(node)
+    size: stats.CumulativeSize,
+    folder: stats.NumLinks > 0
   };
 }
 

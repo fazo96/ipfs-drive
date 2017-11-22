@@ -7,6 +7,7 @@ import {
   ToolbarTitle
 } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import ContentPaste from 'material-ui/svg-icons/content/content-paste';
 import Toggle from './Toggle';
 import filesize from 'filesize';
@@ -16,16 +17,21 @@ const FileManagerToolbar = props => {
     openAddModal,
     clipboardItem,
     handlePaste,
+    handleClear,
     size
   } = props;
+  const sizeText = size > 0 ? filesize(size) : '...';
   return (<Toolbar>
     <ToolbarGroup firstChild={true}>
-      <ToolbarTitle text={filesize(size || 0)} style={{marginLeft: '22px'}}/>
+      <ToolbarTitle text={sizeText} style={{marginLeft: '22px'}}/>
     </ToolbarGroup>
     <ToolbarGroup lastChild={true}>
       <Toggle showIf={clipboardItem !== null}>
         <RaisedButton label="Paste" secondary={true} onClick={() => handlePaste(clipboardItem)} icon={<ContentPaste />}/>
         <ToolbarSeparator style={{margin:0}}/>
+      </Toggle>
+      <Toggle showIf={size > 4}>
+        <FlatButton label="Clear" onClick={handleClear} />
       </Toggle>
       <RaisedButton label="New" primary={true} onClick={openAddModal}/>
     </ToolbarGroup>
@@ -36,7 +42,8 @@ FileManagerToolbar.propTypes = {
   openAddModal: PropTypes.func,
   size: PropTypes.number,
   clipboardItem: PropTypes.object,
-  handlePaste: PropTypes.func
+  handlePaste: PropTypes.func,
+  handleClear: PropTypes.func
 };
 
 export default FileManagerToolbar;

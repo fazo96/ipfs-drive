@@ -6,7 +6,8 @@ import {
   COPY,
   PASTE,
   SHARE,
-  CLEAR_NOTIFICATION
+  CLEAR_NOTIFICATION,
+  LINK_ANALYSIS
 } from '../constants/actionTypes';
 import initialState from './initialState';
 
@@ -33,6 +34,15 @@ export default function ipfsReducer(state = initialState.ipfs, action) {
 
     case CLEAR_NOTIFICATION:
       newState.notification = Object.assign({}, initialState.ipfs.notification);
+      return newState;
+
+    case LINK_ANALYSIS:
+      newState.files = newState.files.map(f => {
+        if (f.hash === action.item.hash) {
+          return Object.assign({}, f, action.item);
+        }
+        return f;
+      });
       return newState;
 
     case CHANGE_FILES:

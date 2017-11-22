@@ -2,7 +2,6 @@ import * as types from '../constants/actionTypes';
 import { push } from 'react-router-redux';
 import {
   readLinks,
-  readDir,
   fileWithName,
   analyze
 } from '../utils/ipfs';
@@ -44,7 +43,7 @@ export function goTo(path) {
     }
     const finalHash = newPath[newPath.length-1].hash;
     dispatch(setPath(newPath));
-    files = await readDir(finalHash);
+    files = await dispatch(readDir(finalHash));
     dispatch({type: types.CHANGE_FILES, files});
   };
 }
@@ -95,4 +94,18 @@ export const emptyHash = 'QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn';
 
 export function loadRootHash() {
   return window.localStorage.getItem('ipfsDriveRootHash') || emptyHash;
+}
+
+export function readDir (hash) {
+  return async function (dispatch) {
+    let links = await readLinks(hash);
+    links.map(async link => {
+      const analysis = await analyze(link);
+      dispatch({
+        type: types.LINK_ANALYSIS,
+        item: analysis
+      });
+    });
+    return links;
+  };
 }
