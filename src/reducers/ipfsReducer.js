@@ -32,7 +32,7 @@ export default function ipfsReducer(state = initialState.ipfs, action) {
       return newState;
 
     case CLEAR_NOTIFICATION:
-      newState.notification = Object.assing({}, initialState.ipfs.notification);
+      newState.notification = Object.assign({}, initialState.ipfs.notification);
       return newState;
 
     case CHANGE_FILES:

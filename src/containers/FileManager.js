@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
+import { clearNotification } from '../actions/notificationActions';
 import { openModal, closeModal } from "../actions/addActions";
 import { goTo, goToRelative } from '../actions/ipfsNavigateActions';
 import { add } from '../actions/ipfsWriteActions';
@@ -62,7 +63,8 @@ class FileManager extends React.Component {
       copy,
       remove,
       share,
-      notification
+      notification,
+      clearNotification
     } = this.props;
     const { renamingItem } = this.state;
     const showParent = pathToArrayOfObjects(location.pathname).length > 1;
@@ -82,7 +84,12 @@ class FileManager extends React.Component {
       { loading ? <LoadingIndicator /> : folderViewer }
       <Rename open={renamingItem != null} handleChoose={this.rename.bind(this)} item={renamingItem} />
       <Add open={addModalOpen} handleClose={closeAddModal} handleAdd={add}/>
-      <Snackbar open={notification.open} message={notification.message || ''} />
+      <Snackbar
+        open={notification.open}
+        message={notification.message || ''}
+        onRequestClose={clearNotification}
+        autohideDuration={4000}
+      />
     </div>);
   }
 }
@@ -104,7 +111,8 @@ FileManager.propTypes = {
   remove: PropTypes.func,
   rename: PropTypes.func,
   share: PropTypes.func,
-  notification: PropTypes.object
+  notification: PropTypes.object,
+  clearNotification: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -129,6 +137,7 @@ function mapDispatchToProps(dispatch){
     rename: (name, newName) => dispatch(rename(name, newName)),
     share: item => dispatch(share(item)),
     openAddModal: () => dispatch(openModal()),
+    clearNotification: () => dispatch(clearNotification())
   };
 }
 
