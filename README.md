@@ -4,33 +4,11 @@ A static web app to manage files and folders in IPFS. Works on any IPFS folder, 
 
 ## Try it
 
-This is a development build, with missing features and known issues detailed below:
+This is a development build, with missing features and known issues.
 
-https://ipfs.io/ipfs/QmTKJKRSjk3FrcVL3SdiUXgA8pRQWDUXirJxy3NiWVH1GT
+[Latest Release](https://ipfs.io/ipfs/QmULwT1X6BTZdKprR7Q32BrtznGtaHwEzUxJfaVfQaAySe)
 
-### Known Issues
-
-- __(critical)__ staying open a couple of minutes (even idling) leads to memory hog, high cpu usage and quickly browser tab crash
-- many javascript errors outputted by ipfs in the browser console
-- reading a directory is poorly done: all the contents are analyzed to figure out if they are a subfolder, but this is not efficient and blocks access to all subfolders if even one of them can't be analyzed
-- downloads don't work on firefox
-
-## Features for initial release
-
-IPFS Drive will be a static web app to manage files and folders in IPFS. It will allow to open any folder and edit the contents. After each edit of course the hash will change.
-
-- [x] navigate inside a folder and up the parent directory
-- [x] quick sharing via URL
-- [x] create new files from hash or text
-- [x] create folders
-- [x] download files on click
-- [x] UI: Favicon, toolbar
-- [x] link to github
-- [x] delete, move, rename, copy files and folders
-- [x] ~~an help/about page~~ I guess github link counts
-- [x] remember the user's last visited folder
-- [x] play nice when served from gateways
-- [ ] implement sharing via URLs
+See the CHANGELOG.md file for information about the latest release and its features.
 
 ### Additional feature wishlist
 

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Toolbar,
   ToolbarGroup,
-  ToolbarSeparator,
   ToolbarTitle
 } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -28,7 +27,6 @@ const FileManagerToolbar = props => {
     <ToolbarGroup lastChild={true}>
       <Toggle showIf={clipboardItem !== null}>
         <RaisedButton label="Paste" secondary={true} onClick={() => handlePaste(clipboardItem)} icon={<ContentPaste />}/>
-        <ToolbarSeparator style={{margin:0}}/>
       </Toggle>
       <Toggle showIf={size > 4}>
         <FlatButton label="Clear" onClick={handleClear} />
