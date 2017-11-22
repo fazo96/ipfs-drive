@@ -16,3 +16,5 @@ export const SHARE = 'SHARE';
 export const CUT = 'CUT';
 export const COPY = 'COPY';
 export const PASTE = 'PASTE';
+
+export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION';

@@ -4,7 +4,9 @@ import {
   SET_PATH,
   CUT,
   COPY,
-  PASTE
+  PASTE,
+  SHARE,
+  CLEAR_NOTIFICATION
 } from '../constants/actionTypes';
 import initialState from './initialState';
 
@@ -20,6 +22,17 @@ export default function ipfsReducer(state = initialState.ipfs, action) {
 
     case PASTE:
       newState.clipboardItem = null;
+      return newState;
+
+    case SHARE:
+      newState.notification = {
+        open: true,
+        message:'Link copied to clipboard'
+      };
+      return newState;
+
+    case CLEAR_NOTIFICATION:
+      newState.notification = Object.assing({}, initialState.ipfs.notification);
       return newState;
 
     case CHANGE_FILES:

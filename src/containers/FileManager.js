@@ -10,8 +10,9 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import { areStringPathsDifferent, pathToArrayOfObjects } from '../utils/path';
 import { downloadFromJs as download } from '../utils/download';
 import FileManagerToolbarContainer from '../containers/FileManagerToolbarContainer';
-import { cut, copy, remove, rename } from '../actions/folderItemActions';
+import { cut, copy, remove, rename, share } from '../actions/folderItemActions';
 import Rename from '../components/Rename';
+import Snackbar from 'material-ui/Snackbar';
 
 class FileManager extends React.Component {
   constructor(props) {
@@ -59,7 +60,9 @@ class FileManager extends React.Component {
       location,
       cut,
       copy,
-      remove
+      remove,
+      share,
+      notification
     } = this.props;
     const { renamingItem } = this.state;
     const showParent = pathToArrayOfObjects(location.pathname).length > 1;
@@ -72,12 +75,14 @@ class FileManager extends React.Component {
       handleRemove={remove}
       handleRename={this.handleRename.bind(this)}
       handleNewItem={openAddModal}
+      handleShare={share}
     />);
     return (<div>
       { loading ? <div/> : <FileManagerToolbarContainer /> }
       { loading ? <LoadingIndicator /> : folderViewer }
       <Rename open={renamingItem != null} handleChoose={this.rename.bind(this)} item={renamingItem} />
       <Add open={addModalOpen} handleClose={closeAddModal} handleAdd={add}/>
+      <Snackbar open={notification.open} message={notification.message || ''} />
     </div>);
   }
 }
@@ -97,7 +102,9 @@ FileManager.propTypes = {
   cut: PropTypes.func,
   copy: PropTypes.func,
   remove: PropTypes.func,
-  rename: PropTypes.func
+  rename: PropTypes.func,
+  share: PropTypes.func,
+  notification: PropTypes.object
 };
 
 function mapStateToProps(state) {
@@ -105,7 +112,8 @@ function mapStateToProps(state) {
     files: state.ipfs.files,
     addModalOpen: state.addModal.open,
     loading: state.ipfs.loading,
-    path: state.ipfs.path
+    path: state.ipfs.path,
+    notification: state.ipfs.notification
   };
 }
 
@@ -119,6 +127,7 @@ function mapDispatchToProps(dispatch){
     copy: item => dispatch(copy(item)),
     remove: item => dispatch(remove(item)),
     rename: (name, newName) => dispatch(rename(name, newName)),
+    share: item => dispatch(share(item)),
     openAddModal: () => dispatch(openModal()),
   };
 }

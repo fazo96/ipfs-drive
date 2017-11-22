@@ -24,12 +24,13 @@ const FolderViewer = props => {
     handleCopy,
     handleRemove,
     handleRename,
-    handleNewItem
+    handleNewItem,
+    handleShare
   } = props;
   return (<div style={containerStyle}><List style={itemStyle}>
     { showParent ? <Parent onClick={onClickItem} style={itemStyle} /> : <span/> }
     { items.map((f, i) => (<FolderItem
-      item={f} key={i} onClick={onClickItem}
+      item={f} key={i} onClick={onClickItem} handleShare={handleShare}
       handleCut={handleCut} handleCopy={handleCopy}
       handleRemove={handleRemove} handleRename={handleRename}
       />))
@@ -47,7 +48,8 @@ FolderViewer.propTypes = {
   handlePaste: PropTypes.func,
   handleRemove: PropTypes.func,
   handleRename: PropTypes.func,
-  handleNewItem: PropTypes.func
+  handleNewItem: PropTypes.func,
+  handleShare: PropTypes.func
 };
 
 export default FolderViewer;
