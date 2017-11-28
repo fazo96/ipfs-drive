@@ -5,10 +5,10 @@ import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
 import { clearNotification } from '../actions/notificationActions';
 import { openModal, closeModal } from "../actions/addActions";
-import { goTo, goToRelative } from '../actions/ipfsNavigateActions';
+import { setPath } from '../actions/ipfsNavigateActions';
 import { add } from '../actions/ipfsWriteActions';
 import LoadingIndicator from '../components/LoadingIndicator';
-import { areStringPathsDifferent, pathToArrayOfObjects } from '../utils/path';
+import { pathToArrayOfObjects, getFilePath } from '../utils/path';
 import { downloadFromJs as download } from '../utils/download';
 import FileManagerToolbarContainer from '../containers/FileManagerToolbarContainer';
 import { cut, copy, remove, rename, share } from '../actions/folderItemActions';
@@ -23,20 +23,9 @@ class FileManager extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (this.props.path.length === 0) {
-      this.props.goTo(this.props.location.pathname);
-    }
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (areStringPathsDifferent(newProps.location.pathname, this.props.location.pathname)) {
-      this.props.goTo(newProps.location.pathname);
-    }
-  }
-
   onClickitem(item) {
-    if (item.folder) this.props.goToRelative(item.name);
+    const { path, setPath } = this.props;
+    if (item.folder) setPath(getFilePath(item, path));
     else download(item);
   }
 
@@ -102,8 +91,7 @@ FileManager.propTypes = {
   openAddModal: PropTypes.func,
   closeAddModal: PropTypes.func,
   loading: PropTypes.bool,
-  goTo: PropTypes.func,
-  goToRelative: PropTypes.func,
+  setPath: PropTypes.func,
   location: PropTypes.object,
   path: PropTypes.arrayOf(PropTypes.object),
   cut: PropTypes.func,
@@ -127,10 +115,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch){
   return {
-    goToRelative: path => dispatch(goToRelative(path)),
     add: obj => dispatch(add(obj)),
     closeAddModal: () => dispatch(closeModal()),
-    goTo: path => dispatch(goTo(path)),
+    setPath: path => dispatch(setPath(path)),
     cut: item => dispatch(cut(item)),
     copy: item => dispatch(copy(item)),
     remove: item => dispatch(remove(item)),

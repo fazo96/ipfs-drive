@@ -1,6 +1,6 @@
 {
   "name": "ipfs-drive",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "file manager for ipfs that runs in the browser",
   "engines": {
     "npm": ">=3"
@@ -43,7 +43,7 @@
     "react-router-dom": "4.2.2",
     "react-router-redux": "5.0.0-alpha.6",
     "redux": "3.6.0",
-    "redux-thunk": "2.1.0",
+    "redux-saga": "0.16.0",
     "streamsaver": "1.0.1"
   },
   "devDependencies": {
@@ -81,7 +81,7 @@
     "jest-cli": "20.0.4",
     "json-loader": "0.5.4",
     "mockdate": "2.0.1",
-    "node-sass": "4.5.3",
+    "node-sass": "4.7.2",
     "opn-cli": "3.1.0",
     "postcss-loader": "2.0.6",
     "prompt": "1.0.0",

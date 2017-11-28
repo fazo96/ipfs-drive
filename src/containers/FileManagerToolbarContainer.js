@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import FileManagerToolBar from '../components/FileManagerToolbar';
 import { openModal } from '../actions/addActions';
 import { paste } from '../actions/folderItemActions';
-import { emptyHash, goTo } from '../actions/ipfsNavigateActions';
+import { setPath, emptyHash } from '../actions/ipfsNavigateActions';
 
 const FileManagerToolbarContainer = (props) => {
   const size = props.path.length < 1 ? 0 : props.path[props.path.length-1].size;
@@ -30,7 +30,7 @@ function mapDispatchToProps(dispatch){
   return {
     openAddModal: () => dispatch(openModal()),
     handlePaste: item => dispatch(paste(item)),
-    handleClear: () => dispatch(goTo('/ipfs/' + emptyHash))
+    handleClear: () => dispatch(setPath('/ipfs/' + emptyHash))
   };
 }
 

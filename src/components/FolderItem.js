@@ -8,6 +8,7 @@ import IconButton from 'material-ui/IconButton';
 import FileFolderIcon from 'material-ui/svg-icons/file/folder';
 import InsertDriveFileIcon from 'material-ui/svg-icons/editor/insert-drive-file';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import WarningIcon from 'material-ui/svg-icons/alert/warning';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import CopyIcon from 'material-ui/svg-icons/content/content-copy';
 import CutIcon from 'material-ui/svg-icons/content/content-cut';
@@ -30,10 +31,12 @@ const iconButtonElement = (
 );
 
 const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handleShare, handleRename }) => {
-  const url = window.location.href + '/' + item.name || '';
+  const url = window.location.href + '/' + encodeURIComponent(item.name || '');
   const analyzed = item.size > 0 && typeof item.folder === 'boolean';
-  const leftIcon = analyzed ? (item.folder ? <FileFolderIcon /> : <InsertDriveFileIcon />) : <SettingsIcon />;
-  const secondaryText = analyzed ? 'Size: ' + filesize(item.size) : 'Searching IPFS...';
+  const analyzing = !analyzed && item.analyzing;
+  const leftIcon = analyzed ? (item.folder ? <FileFolderIcon /> : <InsertDriveFileIcon />) : (analyzing ? <SettingsIcon /> : <WarningIcon/>);
+  const secondaryText = analyzed ? 'Size: ' + filesize(item.size) : (analyzing ? 'Searching IPFS...' : 'Metadata not available');
+  // TODO on click not analyzed start analysis
   const onClickItem = analyzed ? (() => onClick(item)) : undefined;
   const rightIconButton = (<IconMenu iconButtonElement={iconButtonElement}>
     <CopyToClipboard text={url} onClick={() => handleShare(item)}>

@@ -7,7 +7,8 @@ export function areStringPathsDifferent(path, otherPath) {
   return removeTrailingSlash(path) !== removeTrailingSlash(otherPath);
 }
 
-export function arrayPathToString(path) {
+export function pathToString(path) {
+  if (typeof path === 'string') return path;
   const basePath = path[0].ipns ? '/ipns/' : '/ipfs/';
   const pathString = basePath + [path[0].hash].concat(path.slice(1).map(p => p.name)).join('/');
   return pathString;
@@ -31,4 +32,13 @@ export function pathToArrayOfObjects(path) {
       return obj;
     }
   }).filter(o => o !== null);
+}
+
+export function getFilePath(item, path) {
+  if (item === '..' || item.name === '..') {
+    return pathToArrayOfObjects(path).slice(0, path.length-1);
+  } else if (item === '.' || item.name !== '.') {
+    return pathToArrayOfObjects(path).concat(item);
+  }
+  return path;
 }
