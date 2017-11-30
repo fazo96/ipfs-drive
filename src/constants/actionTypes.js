@@ -1,5 +1,4 @@
-export const START_LOADING = 'START_LOADING';
-export const DONE_LOADING = 'DONE_LOADING';
+export const ROUTER_LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
 export const ANALYZE_LINK = 'ANALYZE_LINK';
 export const LINK_ANALYSIS = 'LINK_ANALYSIS';
@@ -18,5 +17,7 @@ export const SHARE = 'SHARE';
 export const CUT = 'CUT';
 export const COPY = 'COPY';
 export const PASTE = 'PASTE';
+export const CLEAR_CLIPBOARD = 'CLEAR_CLIPBOARD';
 
+export const NOTIFY = 'NOTIFY';
 export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION';

@@ -2,14 +2,14 @@ export default {
   addModal: {
     open: false
   },
-  ipfs: {
-    notification: {
-      open: false,
-      message: null
-    },
-    clipboardItem: null,
-    path: [],
-    files: [],
-    loading: true
-  }
+  currentOperation: {
+    active: true
+  },
+  notification: {
+    open: false,
+    message: null
+  },
+  files: [],
+  clipboard: null,
+  path: []
 };

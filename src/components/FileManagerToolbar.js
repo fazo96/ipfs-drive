@@ -31,7 +31,7 @@ const FileManagerToolbar = props => {
       <Toggle showIf={size > 4}>
         <FlatButton label="Clear" onClick={handleClear} />
       </Toggle>
-      <RaisedButton label="New" primary={true} onClick={openAddModal}/>
+      <RaisedButton label="Add" primary={true} onClick={openAddModal}/>
     </ToolbarGroup>
   </Toolbar>);
 };

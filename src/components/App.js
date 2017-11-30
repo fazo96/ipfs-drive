@@ -5,7 +5,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import TitleBar from '../components/TitleBar';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FileManager from "../containers/FileManager";
-import { loadRootHash } from '../actions/ipfsNavigateActions';
+import { loadRootHash } from '../actions/pathActions';
 
 // This is a class-based component because the current
 // version of hot reloading won't hot reload a stateless

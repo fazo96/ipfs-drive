@@ -1,4 +1,3 @@
-import * as types from '../constants/actionTypes';
 import {
   buildNewPath,
   createItem,
@@ -7,11 +6,13 @@ import {
   renameLink
 } from '../utils/ipfs';
 import { call, put, select } from 'redux-saga/effects';
-import { setPath } from '../actions/ipfsNavigateActions';
+import { setPath } from '../actions/pathActions';
+import { notifyError } from '../actions/error';
+import { analyzeLink } from '../actions/filesActions';
 
-export function* watchAdd(action){
-  const { item } = action;
+function* addLinkSaga(item){
   let newItem;
+  const state = yield select();
   // Prepare item
   if (item.hash) {
     newItem = item;
@@ -21,39 +22,58 @@ export function* watchAdd(action){
   } else {
     newItem = yield call(createItem, item.name);
   }
-  // Prepare path info
-  const state = yield select();
-  const currentPath = state.ipfs.path;
-  const dirHash = currentPath[currentPath.length-1].hash;
-  // Add the item and update path
-  const newHash = yield call(addItemToDirectory, dirHash, newItem);
-  const path = yield call(buildNewPath, currentPath, newHash);
-  yield put(setPath(path));
-  // Analyze new item
-  yield put({ type: types.ANALYZE_LINK, hash: newHash });
+  if (state.files.filter(f => f.name === item.name).length > 0) {
+    yield put(notifyError('There is already an item with that name'));
+  } else {
+    // Prepare path info
+    const currentPath = state.path;
+    const dirHash = currentPath[currentPath.length-1].hash;
+    // Add the item and update path
+    const newHash = yield call(addItemToDirectory, dirHash, newItem);
+    const path = yield call(buildNewPath, currentPath, newHash);
+    yield put(setPath(path));
+    // Analyze new item
+    yield put(analyzeLink({ hash: newHash }));
+  }
 }
 
-export function* watchRemove(action){
-  const { name } = action;
+export function* watchAdd(action){
+  yield addLinkSaga(action.item);
+}
+
+export function* watchPaste(){
   const state = yield select();
-  const currentPath = state.ipfs.path;
-  const dirHash = currentPath[currentPath.length-1].hash;
-  const files = state.ipfs.files;
-  const newHash = yield call(removeLink, dirHash, files, name);
-  // Update path
-  const path = yield call(buildNewPath, currentPath, newHash);
-  yield put(setPath(path));
+  yield addLinkSaga(state.clipboard);
 }
 
 export function* watchRename(action){
   const { name, newName } = action;
   const state = yield select();
-  const currentPath = state.ipfs.path;
+  const currentPath = state.path;
   const dirHash = currentPath[currentPath.length-1].hash;
-  const files = state.ipfs.files;
+  const files = state.files;
   const newHash = yield call(renameLink, dirHash, files, name, newName);
   // Analyze new item
-  yield put({ type: types.ANALYZE_LINK, hash: newHash });
+  yield put(analyzeLink({ hash: newHash }));
+  // Update path
+  const path = yield call(buildNewPath, currentPath, newHash);
+  yield put(setPath(path));
+}
+
+export function* watchRemove(action){
+  yield removeLinkSaga(action.name);
+}
+
+export function* watchCut(action){
+  yield removeLinkSaga(action.item.name);
+}
+
+function* removeLinkSaga(name) {
+  const state = yield select();
+  const currentPath = state.path;
+  const dirHash = currentPath[currentPath.length-1].hash;
+  const files = state.files;
+  const newHash = yield call(removeLink, dirHash, files, name);
   // Update path
   const path = yield call(buildNewPath, currentPath, newHash);
   yield put(setPath(path));

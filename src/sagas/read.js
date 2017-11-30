@@ -1,23 +1,25 @@
-import * as types from '../constants/actionTypes';
 import {
   readLinks,
   analyze
 } from '../utils/ipfs';
 import { call, put, fork } from 'redux-saga/effects';
 import { pathToArrayOfObjects } from '../utils/path';
+import { setContent, analyzeLink, linkAnalysis, fetchContent } from '../actions/filesActions';
+import { updatePathInfo } from '../actions/pathActions';
+import { notifyError } from '../actions/error';
 
 export function* watchFetchContent(action) {
   const { hash } = action.path[action.path.length-1];
   let links = yield call(readLinks, hash);
-  yield put({ type: types.SET_CONTENT, files: links });
+  yield put(setContent(links));
   yield fork(analyzeLinks, links);
 }
 
 function* analyzeLinks(links) {
   for (const link of links) {
-    yield put({ type: types.ANALYZE_LINK, item: link });
+    yield put(analyzeLink(link));
     const analysis = yield call(analyze, link);
-    yield put({ type: types.LINK_ANALYSIS, item: analysis });
+    yield put(linkAnalysis(analysis));
   }
 }
 
@@ -53,13 +55,13 @@ function* watchSetPath(action) {
           files = yield call(readLinks, hash);
         } else {
           // TODO errors
-          return yield put({type: 'ERROR'});
+          return yield put(notifyError('Invalid path'));
         }
       }
     }
     // Fetch content
-    yield put({ type: types.UPDATE_PATH_INFO, path: newPath });
-    yield put({ type: types.FETCH_CONTENT, path: newPath });
+    yield put(updatePathInfo(newPath));
+    yield put(fetchContent(newPath));
   }
 }
 

@@ -1,5 +1,5 @@
 import * as types from '../constants/actionTypes';
-import { removeLink, renameLink } from './ipfsWriteActions';
+import { removeLink, renameLink } from './writeActions';
 
 export function share(item) {
   return {

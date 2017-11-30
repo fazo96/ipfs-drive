@@ -7,7 +7,7 @@ const Toggle = ({ showIf, children }) => {
 
 Toggle.propTypes = {
   showIf: PropTypes.bool,
-  children: PropTypes.arrayOf(PropTypes.element)
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)])
 };
 
 export default Toggle;

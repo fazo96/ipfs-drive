@@ -4,9 +4,9 @@ import {connect} from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
 import { clearNotification } from '../actions/notificationActions';
-import { openModal, closeModal } from "../actions/addActions";
-import { setPath } from '../actions/ipfsNavigateActions';
-import { add } from '../actions/ipfsWriteActions';
+import { openModal, closeModal } from "../actions/addModalActions";
+import { setPath } from '../actions/pathActions';
+import { add } from '../actions/writeActions';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { pathToArrayOfObjects, getFilePath } from '../utils/path';
 import { downloadFromJs as download } from '../utils/download';
@@ -105,11 +105,11 @@ FileManager.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    files: state.ipfs.files,
+    files: state.files,
     addModalOpen: state.addModal.open,
-    loading: state.ipfs.loading,
-    path: state.ipfs.path,
-    notification: state.ipfs.notification
+    loading: state.currentOperation.active,
+    path: state.path,
+    notification: state.notification
   };
 }
 

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FileManagerToolBar from '../components/FileManagerToolbar';
-import { openModal } from '../actions/addActions';
+import { openModal } from '../actions/addModalActions';
 import { paste } from '../actions/folderItemActions';
-import { setPath, emptyHash } from '../actions/ipfsNavigateActions';
+import { setPath, emptyHash } from '../actions/pathActions';
 
 const FileManagerToolbarContainer = (props) => {
   const size = props.path.length < 1 ? 0 : props.path[props.path.length-1].size;
@@ -21,8 +21,8 @@ FileManagerToolbarContainer.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    path: state.ipfs.path,
-    clipboardItem: state.ipfs.clipboardItem
+    path: state.path,
+    clipboardItem: state.clipboard
   };
 }
 

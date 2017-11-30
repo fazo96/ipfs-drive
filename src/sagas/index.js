@@ -8,7 +8,9 @@ import {
 import {
   watchAdd,
   watchRemove,
-  watchRename
+  watchRename,
+  watchCut,
+  watchPaste
 } from './write';
 
 export default function* saga() {
@@ -20,4 +22,6 @@ export default function* saga() {
   yield takeLatest(types.ADD, watchAdd);
   yield takeLatest(types.REMOVE, watchRemove);
   yield takeLatest(types.RENAME, watchRename);
+  yield takeLatest(types.CUT, watchCut);
+  yield takeLatest(types.PASTE, watchPaste);
 }

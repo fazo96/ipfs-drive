@@ -1,11 +1,19 @@
 import { combineReducers } from 'redux';
-import ipfs from './ipfsReducer';
-import addModal from './addModalReducer';
 import { routerReducer } from 'react-router-redux';
+import files from './filesReducer';
+import path from './pathReducer';
+import clipboard from './clipboardReducer';
+import addModal from './addModalReducer';
+import currentOperation from './operationProgressReducer';
+import notification from './notificationReducer';
 
 const rootReducer = combineReducers({
-  ipfs,
+  path,
+  files,
   addModal,
+  clipboard,
+  currentOperation,
+  notification,
   routing: routerReducer
 });
 
