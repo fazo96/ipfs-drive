@@ -48,6 +48,7 @@ This is what I'd like to work on next, in no particular order:
 
 - write tests
 - improve performance in huge folders. Improve item metadata analysis
+- configurable connectivity to go-ipfs for persistence and an overall improved experience
 - splitting the JS to avoid 6MB brick and to make updates slimmer
 - offline support with service workers
 - "upload" local files
@@ -63,8 +64,16 @@ This is what I'd like to work on next, in no particular order:
 - basic or configurable integration with other IPFS static apps to open files: for example open md file in a markdown renderer
 - multiple file/folder delete, move, copy
 - pinning. It should start a "background job" that notifies the user when done
-- Feeds: feeds will be a way to share stuff. Other users will be able to subscribe to your feed with a link and they'll see what you publish
 - download folder as archive
 - some way to guarantee and check availability
 - simple search
 - IPNS support (blocked due to IPNS not being implemented in js-ipfs)
+
+#### Long term
+
+These are longer term ideas that imply a change in scope for the project.
+
+- Feeds: feeds will be a way to share stuff. Other users will be able to subscribe to your feed with a link and they'll see what you publish. This would turn Drive into a bit of a social media platform, or it could just be a way to publish dynamic content.
+- real time file managing with other people
+- integrated content viewing and editing, for example playing videos
+- turn this into a complete IPFS Web UI
