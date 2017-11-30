@@ -36,7 +36,7 @@ This is what's changed between the latest build and master.
 
 This is what's currently known as broken in master.
 
-- __(critical)__ unstable IPFS. Waiting for js-ipfs 0.27 to solve this
+- __(critical)__ sometimes browser tab crashes. Waiting for js-ipfs 0.27 to solve this
 - many javascript errors outputted by ipfs in the browser console
 - sluggish interface in huge folders
 - downloads don't work on firefox (missing Streams API)
