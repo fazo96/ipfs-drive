@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import TitleBar from '../components/TitleBar';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import WithTheme from './WithTheme';
 import FileManager from "../containers/FileManager";
 import { loadRootHash } from '../actions/pathActions';
 
@@ -15,15 +15,13 @@ class App extends React.Component {
   render() {
     const redirectToEmptyObject = () => <Redirect to={'/ipfs/' + loadRootHash()} />;
     return (
-      <MuiThemeProvider>
-        <div>
-          <TitleBar />
-          <Switch>
-            <Route path="/ipfs/" component={FileManager} />
-            <Route path="/" render={redirectToEmptyObject} />
-          </Switch>
-        </div>
-      </MuiThemeProvider>
+      <WithTheme>
+        <TitleBar />
+        <Switch>
+          <Route path="/ipfs/" component={FileManager} />
+          <Route path="/" render={redirectToEmptyObject} />
+        </Switch>
+      </WithTheme>
     );
   }
 }

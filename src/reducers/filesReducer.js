@@ -5,6 +5,7 @@ import {
   LINK_ANALYSIS
 } from '../constants/actionTypes';
 import initialState from './initialState';
+import updateSingleItem from './common/itemArrayUtils';
 
 export default function filesReducer(files = initialState.files, action){
 
@@ -17,20 +18,10 @@ export default function filesReducer(files = initialState.files, action){
       return [ ...action.files ];
 
     case LINK_ANALYSIS:
-      return files.map(f => {
-        if (f.hash === action.item.hash) {
-          return Object.assign({}, f, action.item, { analyzing: false });
-        }
-        return f;
-      });
+      return updateSingleItem(files, action.item);
 
     case ANALYZE_LINK:
-      return files.map(f => {
-        if (f.hash === action.item.hash) {
-          return Object.assign({}, f, { analyzing: true });
-        }
-        return f;
-      });
+      return updateSingleItem(files, { analyzing: true });
 
       default: return files;
 

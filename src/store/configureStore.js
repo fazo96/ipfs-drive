@@ -11,10 +11,6 @@ const sagaMiddleware = createSagaMiddleware();
 
 export const history = createHistory();
 
-function startSaga() {
-  sagaMiddleware.run(saga);
-}
-
 function configureStoreProd(initialState) {
   const reactRouterMiddleware = routerMiddleware(history);
   const middlewares = [
@@ -27,7 +23,7 @@ function configureStoreProd(initialState) {
     )
   );
 
-  startSaga();
+  sagaMiddleware.run(saga);
 
   return store;
 }
@@ -47,15 +43,23 @@ function configureStoreDev(initialState) {
     )
   );
 
+  let sagaTask = sagaMiddleware.run(saga);
+
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
     module.hot.accept('../reducers', () => {
       const nextReducer = require('../reducers').default; // eslint-disable-line global-require
       store.replaceReducer(nextReducer);
     });
+    // Enable Webpack hot module replacement for sagas
+    module.hot.accept('../sagas', () => {
+      const newSaga = require('../sagas');
+      sagaTask.cancel();
+      sagaTask.done.then(() => {
+        sagaTask = sagaMiddleware.run(newSaga);
+      });
+    });
   }
-
-  startSaga();
 
   return store;
 }

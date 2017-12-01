@@ -10,7 +10,8 @@ export function areStringPathsDifferent(path, otherPath) {
 export function pathToString(path) {
   if (typeof path === 'string') return path;
   const basePath = path[0].ipns ? '/ipns/' : '/ipfs/';
-  const pathString = basePath + [path[0].hash].concat(path.slice(1).map(p => p.name)).join('/');
+  const firstItem = path[0].ipns ? path[0].ipns : path[0].hash;
+  const pathString = basePath + [firstItem].concat(path.slice(1).map(p => p.name)).join('/');
   return pathString;
 }
 
@@ -20,14 +21,21 @@ export function pathToArrayOfObjects(path) {
   if (typeof path === 'string'){
     p = p.split('/').filter(s => !!s);
   }
-  let first = p[0];
-  if (first === '' || first === 'ipfs' || first === 'ipns') p = p.slice(1);
+  let ipns = false;
+  let firstParsed = false;
   return p.map((obj, i) => {
-    if (obj === '' || (i === 0 && (obj === 'ipfs' || obj === 'ipns'))) {
+    if (obj === 'ipns') {
+      ipns = true;
+      return null;
+    } else if (obj === '' || (i === 0 && obj === 'ipfs')) {
       return null;
     } else if (typeof obj === 'string') {
-      if (i === 0) return { hash: obj };
-      return { name: obj };
+      if (!firstParsed) {
+        firstParsed = true;
+        return ipns ? { ipns: obj } : { hash: obj };
+      } else {
+        return { name: obj };
+      }
     } else {
       return obj;
     }

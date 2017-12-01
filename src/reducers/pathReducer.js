@@ -5,6 +5,7 @@ import {
 } from '../constants/actionTypes';
 import initialState from './initialState';
 import { pathToArrayOfObjects } from '../utils/path';
+import { updateSingleItem, updateWholeArray } from './common/itemArrayUtils';
 
 export default function pathReducer(path = initialState.path, action){
   switch (action.type) {
@@ -16,15 +17,10 @@ export default function pathReducer(path = initialState.path, action){
     return path;
 
   case UPDATE_PATH_INFO:
-    return path.map((p, i) => Object.assign({}, p, action.path[i]));
+    return updateWholeArray(path, action.path);
 
   case LINK_ANALYSIS:
-    return path.map(f => {
-      if (f.hash === action.item.hash) {
-        return Object.assign({}, f, action.item);
-      }
-      return f;
-    });
+    return updateSingleItem(path, action.item);
 
   default: return path;
 
