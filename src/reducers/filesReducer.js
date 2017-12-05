@@ -5,7 +5,7 @@ import {
   LINK_ANALYSIS
 } from '../constants/actionTypes';
 import initialState from './initialState';
-import updateSingleItem from './common/itemArrayUtils';
+import { updateSingleItem } from './common/itemArrayUtils';
 
 export default function filesReducer(files = initialState.files, action){
 

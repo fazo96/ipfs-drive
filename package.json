@@ -30,12 +30,9 @@
   },
   "author": "Cory House",
   "license": "MIT",
-  "resolutions": {
-    "libp2p-webrtc-star": "0.13.2"
-  },
   "dependencies": {
     "filesize": "3.5.11",
-    "ipfs": "0.26.0",
+    "ipfs": "0.27.0",
     "material-ui": "0.19.4",
     "material-ui-icons": "1.0.0-beta.17",
     "object-assign": "4.1.0",

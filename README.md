@@ -31,43 +31,47 @@ This is what's changed between the latest build and master.
 
 - general improvements to the code, stability and performance
 - gives some feedback while analyzing folder contents
+- upgraded to ipfs 0.27
 
 #### Known Issues
 
 This is what's currently known as broken in master.
 
-- __(critical)__ sometimes browser tab crashes. Waiting for js-ipfs 0.27 to solve this
-- many javascript errors outputted by ipfs in the browser console
+- some javascript errors outputted by ipfs in the browser console
 - sluggish interface in huge folders
 - downloads don't work on firefox (missing Streams API)
 - UPDATE_CONTENT should be created to avoid triggering file analysis when it's useless
+
+#### Next Release
+
+This is other stuff I'd like to implement before releasing the next version.
+
+- improve performance in huge folders (maybe with infinite scroll). Improve item metadata analysis
 
 ### Additional feature wishlist
 
 This is what I'd like to work on next, in no particular order:
 
 - write tests
-- improve performance in huge folders. Improve item metadata analysis
+- configurable download strategy: currently uses client side download with js-ipfs. It should also allow HTTP downloads via gateway. On firefox disable client side downloads
 - configurable connectivity to go-ipfs for persistence and an overall improved experience
-- splitting the JS to avoid 6MB brick and to make updates slimmer
+- report progress in the most detailed way possibile during IPFS operations
+- IPNS support, of course the underlying ipfs implementation must support it
+- splitting the JS to avoid 6MB brick and maybe to better share code between versions. It should incrementally load the app
 - offline support with service workers
 - "upload" local files
 - some way to check for updates reliably, probably an OrbitDB Feed
-- configurable download strategy: currently uses client side download with js-ipfs. It should also allow HTTP downloads via gateway. On firefox disable client side downloads
-- report progress in the most detailed way possibile during IPFS operations
 - show bitswap stats and maybe some kind of controls over IPFS
 - load google static assets stuff (fonts) locally or from ipfs links
 - show file information like an icon based on extension, file size etc
 - show network stats on files, like availability
-- time machine to "undo" edits
 - if a folder has an index.html, then it's a website/app and the index should open on click
 - basic or configurable integration with other IPFS static apps to open files: for example open md file in a markdown renderer
 - multiple file/folder delete, move, copy
-- pinning. It should start a "background job" that notifies the user when done
+- pinning. It should start a "background job" that notifies the user when done, of course the underlying ipfs implementation must support it
 - download folder as archive
 - some way to guarantee and check availability
 - simple search
-- IPNS support (blocked due to IPNS not being implemented in js-ipfs)
 
 #### Long term
 

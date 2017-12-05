@@ -18,7 +18,14 @@ export async function getIPFS() {
 export async function create () {
   return await new Promise(fullfill => {
     const node = new IPFS({
-      store: String(Math.random() + Date.now())
+      store: window.location.pathname,
+      config: {
+        Addresses: {
+          Swarm: [
+            '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
+          ]
+        }
+      }
     });
 
     node.on('ready', () => fullfill(node));

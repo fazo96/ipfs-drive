@@ -7,6 +7,7 @@ import { clearNotification } from '../actions/notificationActions';
 import { openModal, closeModal } from "../actions/addModalActions";
 import { setPath } from '../actions/pathActions';
 import { add } from '../actions/writeActions';
+import { analyzeLink } from '../actions/filesActions';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { pathToArrayOfObjects, getFilePath } from '../utils/path';
 import { downloadFromJs as download } from '../utils/download';
@@ -24,9 +25,15 @@ class FileManager extends React.Component {
   }
 
   onClickitem(item) {
-    const { path, setPath } = this.props;
-    if (item.folder) setPath(getFilePath(item, path));
-    else download(item);
+    const { path, setPath, analyzeLink } = this.props;
+    const analyzed = item.size > 0 && typeof item.folder === 'boolean';
+    const analyzing = !analyzed && item.analyzing;
+    if (analyzed) {
+      if (item.folder) setPath(getFilePath(item, path));
+      else download(item);
+    } else if (!analyzing) {
+      analyzeLink(item);
+    }
   }
 
   handleRename(renamingItem) {
@@ -99,6 +106,7 @@ FileManager.propTypes = {
   remove: PropTypes.func,
   rename: PropTypes.func,
   share: PropTypes.func,
+  analyzeLink: PropTypes.func,
   notification: PropTypes.object,
   clearNotification: PropTypes.func
 };
@@ -123,6 +131,7 @@ function mapDispatchToProps(dispatch){
     remove: item => dispatch(remove(item)),
     rename: (name, newName) => dispatch(rename(name, newName)),
     share: item => dispatch(share(item)),
+    analyzeLink: item => dispatch(analyzeLink(item)),
     openAddModal: () => dispatch(openModal()),
     clearNotification: () => dispatch(clearNotification())
   };
