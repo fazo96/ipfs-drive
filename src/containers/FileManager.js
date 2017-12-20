@@ -3,18 +3,14 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
-import { clearNotification } from '../actions/notificationActions';
 import { openModal, closeModal } from "../actions/addModalActions";
 import { setPath } from '../actions/pathActions';
 import { add } from '../actions/writeActions';
 import { analyzeLink } from '../actions/filesActions';
-import LoadingIndicator from '../components/LoadingIndicator';
 import { pathToArrayOfObjects, getFilePath } from '../utils/path';
-import { downloadFromJs as download } from '../utils/download';
-import FileManagerToolbarContainer from '../containers/FileManagerToolbarContainer';
+import { downloadFromHTTP as download } from '../utils/download';
 import { cut, copy, remove, rename, share } from '../actions/folderItemActions';
 import Rename from '../components/Rename';
-import Snackbar from 'material-ui/Snackbar';
 
 class FileManager extends React.Component {
   constructor(props) {
@@ -36,6 +32,11 @@ class FileManager extends React.Component {
     }
   }
 
+  ascend() {
+    const { path, setPath } = this.props;
+    setPath(getFilePath('..', path));
+  }
+
   handleRename(renamingItem) {
     this.setState({ renamingItem });
   }
@@ -50,7 +51,6 @@ class FileManager extends React.Component {
     const {
       files,
       addModalOpen,
-      loading,
       add,
       openAddModal,
       closeAddModal,
@@ -59,8 +59,6 @@ class FileManager extends React.Component {
       copy,
       remove,
       share,
-      notification,
-      clearNotification
     } = this.props;
     const { renamingItem } = this.state;
     const showParent = pathToArrayOfObjects(location.pathname).length > 1;
@@ -68,6 +66,7 @@ class FileManager extends React.Component {
       items={files}
       showParent={showParent}
       onClickItem={this.onClickitem.bind(this)}
+      handleAscend={this.ascend.bind(this)}
       handleCut={cut}
       handleCopy={copy}
       handleRemove={remove}
@@ -76,16 +75,9 @@ class FileManager extends React.Component {
       handleShare={share}
     />);
     return (<div>
-      { loading ? <div/> : <FileManagerToolbarContainer /> }
-      { loading ? <LoadingIndicator /> : folderViewer }
+      { folderViewer }
       <Rename open={renamingItem != null} handleChoose={this.rename.bind(this)} item={renamingItem} />
       <Add open={addModalOpen} handleClose={closeAddModal} handleAdd={add}/>
-      <Snackbar
-        open={notification.open}
-        message={notification.message || ''}
-        onRequestClose={clearNotification}
-        autoHideDuration={4000}
-      />
     </div>);
   }
 }
@@ -117,7 +109,8 @@ function mapStateToProps(state) {
     addModalOpen: state.addModal.open,
     loading: state.currentOperation.active,
     path: state.path,
-    notification: state.notification
+    notification: state.notification,
+    location: state.routing.location
   };
 }
 
@@ -133,7 +126,6 @@ function mapDispatchToProps(dispatch){
     share: item => dispatch(share(item)),
     analyzeLink: item => dispatch(analyzeLink(item)),
     openAddModal: () => dispatch(openModal()),
-    clearNotification: () => dispatch(clearNotification())
   };
 }
 

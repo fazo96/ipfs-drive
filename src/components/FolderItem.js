@@ -36,8 +36,6 @@ const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handle
   const analyzing = !analyzed && item.analyzing;
   const leftIcon = analyzed ? (item.folder ? <FileFolderIcon /> : <InsertDriveFileIcon />) : (analyzing ? <SettingsIcon /> : <WarningIcon/>);
   const secondaryText = analyzed ? 'Size: ' + filesize(item.size) : (analyzing ? 'Searching IPFS...' : 'Metadata not available');
-  // TODO on click not analyzed start analysis
-  const onClickItem = analyzed ? (() => onClick(item)) : undefined;
   const rightIconButton = (<IconMenu iconButtonElement={iconButtonElement}>
     <CopyToClipboard text={url} onClick={() => handleShare(item)}>
       <MenuItem primaryText="Share URL" leftIcon={<ShareIcon />} onClick={() => handleShare(item)}/>
@@ -53,7 +51,7 @@ const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handle
     rightIconButton={rightIconButton}
     primaryText={item.name || '(No Name)'}
     secondaryText={secondaryText}
-    onClick={onClickItem}
+    onClick={() => onClick(item)}
   />);
 };
 

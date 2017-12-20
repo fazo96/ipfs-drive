@@ -1,9 +1,10 @@
-import { createWriteStream } from 'streamsaver';
+
 import { getIPFS } from './ipfs';
 
 export async function downloadFromJs(file) {
   // TODO Fix. Broken at the moment
   const ipfs = await getIPFS();
+  const { createWriteStream } = await import('streamsaver');
   const readableStream = await ipfs.files.cat(file.hash);
   const downloadStream = createWriteStream(file.name, undefined, file.size);
   const download = downloadStream.getWriter();

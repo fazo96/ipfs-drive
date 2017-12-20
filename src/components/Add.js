@@ -95,7 +95,7 @@ class Add extends React.Component {
       open={open}
       onRequestClose={handleClose}
     >
-      <TextField floatingLabelText="Name" name="name" fullWidth={true} value={this.state.name} onChange={this.handleChangeName.bind(this)}/>
+      <TextField autoFocus floatingLabelText="Name" name="name" fullWidth={true} value={this.state.name} onChange={this.handleChangeName.bind(this)}/>
       <SelectField
         floatingLabelText="Type"
         value={this.state.type}

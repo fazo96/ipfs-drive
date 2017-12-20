@@ -1,4 +1,3 @@
-import IPFS from 'ipfs';
 import dagPB from 'ipld-dag-pb';
 import multihashes from 'multihashes';
 
@@ -16,18 +15,18 @@ export async function getIPFS() {
 }
 
 export async function create () {
-  return await new Promise(fullfill => {
-    const node = new IPFS({
-      store: window.location.pathname,
-      config: {
-        Addresses: {
-          Swarm: [
-            '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
-          ]
-        }
+  const IPFS = await import('ipfs');
+  const node = new IPFS({
+    store: window.location.pathname,
+    config: {
+      Addresses: {
+        Swarm: [
+          '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
+        ]
       }
-    });
-
+    }
+  });
+  return await new Promise(async fullfill => {
     node.on('ready', () => fullfill(node));
   });
 }
@@ -50,7 +49,7 @@ export async function analyze (link) {
   return {
     hash: link.hash,
     size: stats.CumulativeSize,
-    folder: stats.NumLinks > 0
+    folder: stats.NumLinks > 0 || stats.DataSize === 2
   };
 }
 
@@ -141,9 +140,9 @@ export async function renameLink(hash, files, name, newName){
   const oldDagLink = await createDAGLink(name, link.size, link.hash);
   const ipfs = await getIPFS();
   let newDAGNode = await ipfs.object.patch.rmLink(hash, oldDagLink);
-  hash = multihashes.toB58String(newDAGNode.multihash);
+  const newDAGNodeHash = multihashes.toB58String(newDAGNode.multihash);
   // Add new link (like old one but renamed)
-  const newDagLink = await createDAGLink(newName, link.size, hash);
-  newDAGNode = await ipfs.object.patch.addLink(hash, newDagLink);
+  const newDagLink = await createDAGLink(newName, link.size, link.hash);
+  newDAGNode = await ipfs.object.patch.addLink(newDAGNodeHash, newDagLink);
   return multihashes.toB58String(newDAGNode.multihash);
 }

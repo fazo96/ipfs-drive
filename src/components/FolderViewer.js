@@ -20,6 +20,7 @@ const FolderViewer = props => {
     items,
     showParent,
     onClickItem,
+    handleAscend,
     handleCut,
     handleCopy,
     handleRemove,
@@ -28,7 +29,7 @@ const FolderViewer = props => {
     handleShare
   } = props;
   return (<div style={containerStyle}><List style={itemStyle}>
-    { showParent ? <Parent onClick={onClickItem} style={itemStyle} /> : <span/> }
+    { showParent ? <Parent onClick={handleAscend} style={itemStyle} /> : <span/> }
     { items.map((f, i) => (<FolderItem
       item={f} key={i} onClick={onClickItem} handleShare={handleShare}
       handleCut={handleCut} handleCopy={handleCopy}
@@ -43,6 +44,7 @@ FolderViewer.propTypes = {
   items: PropTypes.array,
   showParent: PropTypes.bool,
   onClickItem: PropTypes.func,
+  handleAscend: PropTypes.func,
   handleCut: PropTypes.func,
   handleCopy: PropTypes.func,
   handlePaste: PropTypes.func,

@@ -8,7 +8,7 @@ const Parent = ({ onClick }) => (<ListItem
   leftAvatar={<Avatar icon={<FileFolder />} />}
   primaryText=".."
   secondaryText="Parent"
-  onClick={() => onClick({ name: '..', folder: true })}
+  onClick={onClick}
 />);
 
 Parent.propTypes = {
