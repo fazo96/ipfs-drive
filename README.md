@@ -32,6 +32,7 @@ This is what's changed between the latest build and master.
 - general improvements to the code, stability and performance
 - gives some feedback while analyzing folder contents
 - upgraded to ipfs 0.27
+- when opening a file it shows some info, allows copying hash or opening on gateway
 
 #### Known Issues
 
