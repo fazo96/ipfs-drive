@@ -8,7 +8,6 @@ import { setPath } from '../actions/pathActions';
 import { add } from '../actions/writeActions';
 import { analyzeLink } from '../actions/filesActions';
 import { pathToArrayOfObjects, getFilePath } from '../utils/path';
-import { downloadFromHTTP as download } from '../utils/download';
 import { cut, copy, remove, rename, share } from '../actions/folderItemActions';
 import Rename from '../components/Rename';
 
@@ -25,8 +24,7 @@ class FileManager extends React.Component {
     const analyzed = item.size > 0 && typeof item.folder === 'boolean';
     const analyzing = !analyzed && item.analyzing;
     if (analyzed) {
-      if (item.folder) setPath(getFilePath(item, path));
-      else download(item);
+      setPath(getFilePath(item, path));
     } else if (!analyzing) {
       analyzeLink(item);
     }

@@ -1,24 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import TitleBar from '../components/TitleBar';
 import WithTheme from '../components/WithTheme';
 import FileManagementPage from "../containers/FileManagementPage";
-import { loadRootHash } from '../actions/pathActions';
 import Snackbar from 'material-ui/Snackbar';
 import { clearNotification } from '../actions/notificationActions';
 import { connect } from 'react-redux';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 class App extends React.Component {
   render() {
     const { notification, clearNotification } = this.props;
-    const redirectToEmptyObject = () => <Redirect to={'/ipfs/' + loadRootHash()} />;
     return (
       <WithTheme>
         <TitleBar />
         <Switch>
           <Route path="/ipfs/" component={FileManagementPage} />
-          <Route path="/" render={redirectToEmptyObject} />
+          <Route path="/" render={() => <LoadingIndicator/>} />
         </Switch>
         <Snackbar
           open={notification.open}
@@ -44,7 +43,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch){
   return {
-    clearNotification: () => dispatch(clearNotification())
+    clearNotification: () => dispatch(clearNotification()),
+    push: s => dispatch(pushAction(s))
   };
 }
 

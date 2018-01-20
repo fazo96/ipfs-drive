@@ -3,9 +3,10 @@ import {
   analyze
 } from '../utils/ipfs';
 import { call, put, spawn } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 import { pathToArrayOfObjects } from '../utils/path';
 import { setContent, analyzeLink, linkAnalysis, fetchContent } from '../actions/filesActions';
-import { updatePathInfo } from '../actions/pathActions';
+import { updatePathInfo, loadRootHash } from '../actions/pathActions';
 import { notifyError } from '../actions/error';
 
 export function* watchFetchContent(action) {
@@ -30,6 +31,8 @@ export function* watchLocationChange(action) {
   const { pathname } = action.payload;
   if (pathname.indexOf('/ipfs/') === 0) {
     yield call(watchSetPath, { path: pathname });
+  } else if (pathname === '/') {
+    yield put(push('/ipfs/' + loadRootHash()));
   }
 }
 
