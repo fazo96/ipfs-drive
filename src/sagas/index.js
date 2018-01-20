@@ -1,9 +1,10 @@
 
 import * as types from '../constants/actionTypes';
-import { takeLatest } from 'redux-saga/effects';
+import { takeLatest, takeEvery } from 'redux-saga/effects';
 import {
   watchFetchContent,
-  watchLocationChange
+  watchLocationChange,
+  watchAnalyzeLink
 } from './read';
 import {
   watchAdd,
@@ -18,6 +19,7 @@ export default function* saga() {
   yield takeLatest('@@router/LOCATION_CHANGE', watchLocationChange);
   // Reading
   yield takeLatest(types.FETCH_CONTENT, watchFetchContent);
+  yield takeEvery(types.ANALYZE_LINK, watchAnalyzeLink);
   // Writing
   yield takeLatest(types.ADD, watchAdd);
   yield takeLatest(types.REMOVE, watchRemove);

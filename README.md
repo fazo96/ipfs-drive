@@ -39,8 +39,6 @@ This is what's currently known as broken in master.
 
 - some javascript errors outputted by ipfs in the browser console
 - sluggish interface in huge folders
-- downloads don't work on firefox (missing Streams API)
-- UPDATE_CONTENT should be created to avoid triggering file analysis when it's useless
 
 #### Next Release
 

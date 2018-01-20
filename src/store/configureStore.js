@@ -53,7 +53,7 @@ function configureStoreDev(initialState) {
     });
     // Enable Webpack hot module replacement for sagas
     module.hot.accept('../sagas', () => {
-      const newSaga = require('../sagas');
+      const newSaga = require('../sagas').default;
       sagaTask.cancel();
       sagaTask.done.then(() => {
         sagaTask = sagaMiddleware.run(newSaga);

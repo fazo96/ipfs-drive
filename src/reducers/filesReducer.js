@@ -21,7 +21,7 @@ export default function filesReducer(files = initialState.files, action){
       return updateSingleItem(files, action.item);
 
     case ANALYZE_LINK:
-      return updateSingleItem(files, { analyzing: true });
+      return updateSingleItem(files, { hash: action.item.hash, analyzing: true });
 
       default: return files;
 

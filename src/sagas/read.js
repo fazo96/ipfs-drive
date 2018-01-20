@@ -2,7 +2,7 @@ import {
   readLinks,
   analyze
 } from '../utils/ipfs';
-import { call, put, fork } from 'redux-saga/effects';
+import { call, put, spawn } from 'redux-saga/effects';
 import { pathToArrayOfObjects } from '../utils/path';
 import { setContent, analyzeLink, linkAnalysis, fetchContent } from '../actions/filesActions';
 import { updatePathInfo } from '../actions/pathActions';
@@ -12,14 +12,17 @@ export function* watchFetchContent(action) {
   const { hash } = action.path[action.path.length-1];
   let links = yield call(readLinks, hash);
   yield put(setContent(links));
-  yield fork(analyzeLinks, links);
+  yield spawn(analyzeLinks, links);
+}
+
+export function* watchAnalyzeLink(action) {
+    const analysis = yield call(analyze, action.item);
+    yield put(linkAnalysis(analysis));
 }
 
 function* analyzeLinks(links) {
   for (const link of links) {
     yield put(analyzeLink(link));
-    const analysis = yield call(analyze, link);
-    yield put(linkAnalysis(analysis));
   }
 }
 
