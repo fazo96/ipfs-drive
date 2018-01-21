@@ -21,7 +21,7 @@ Works on any existing IPFS folder.
 
 This is the latest development build with known issues.
 
-[Check it out](https://ipfs.io/ipfs/QmULwT1X6BTZdKprR7Q32BrtznGtaHwEzUxJfaVfQaAySe)
+[Check it out](https://ipfs.io/ipfs/QmSLoHumxHbaFLSk5tZCvJhhEwt5iNy7P5aPdmWWCjDdKx)
 
 See the CHANGELOG.md file for information about features and known issues in the latest build.
 
