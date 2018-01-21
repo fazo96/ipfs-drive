@@ -1,23 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import TitleBar from '../components/TitleBar';
 import WithTheme from '../components/WithTheme';
-import FileManagementPage from "../containers/FileManagementPage";
+import FileManagementPage from "./FileManagementPage";
+import Homepage from "./Homepage";
 import Snackbar from 'material-ui/Snackbar';
 import { clearNotification } from '../actions/notificationActions';
 import { connect } from 'react-redux';
-import LoadingIndicator from '../components/LoadingIndicator';
+import { push as pushAction } from 'react-router-redux';
 
 class App extends React.Component {
   render() {
-    const { notification, clearNotification } = this.props;
+    const { notification, clearNotification, push } = this.props;
     return (
       <WithTheme>
-        <TitleBar />
+        <TitleBar onClickBrandIcon={() => push('/')}/>
         <Switch>
           <Route path="/ipfs/" component={FileManagementPage} />
-          <Route path="/" render={() => <LoadingIndicator/>} />
+          <Route path="/" component={Homepage} />
         </Switch>
         <Snackbar
           open={notification.open}
@@ -32,7 +33,8 @@ class App extends React.Component {
 
 App.propTypes = {
   notification: PropTypes.object,
-  clearNotification: PropTypes.func
+  clearNotification: PropTypes.func,
+  push: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -44,11 +46,11 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch){
   return {
     clearNotification: () => dispatch(clearNotification()),
-    push: s => dispatch(pushAction(s))
+    push: url => dispatch(pushAction(url))
   };
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(App));

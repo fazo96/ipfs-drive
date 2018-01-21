@@ -8,12 +8,11 @@ import filesize from 'filesize';
 import Toggle from './Toggle';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-function SingleFileManager({ item }) {
+function SingleFileManager({ item, ascend }) {
   const { name, size, hash } = item;
-  //return <div>This is a file. Open it: https://ipfs.io/ipfs/{hash}</div>;
   return (<Card style={{ margin: '2em auto', maxWidth: '30em' }}>
     <CardHeader
-      title={name}
+      title={name || 'Unnamed File'}
       subtitle={'Size: ' + filesize(size || 0)}
       avatar={<Avatar icon={<InsertDriveFileIcon />}/>}
     />
@@ -23,13 +22,17 @@ function SingleFileManager({ item }) {
         <CopyToClipboard text={hash}>
           <FlatButton label="Copy Hash"/>
         </CopyToClipboard>
+        <Toggle showIf={typeof ascend === 'function'}>
+          <FlatButton label="View Parent" onClick={ascend} />
+        </Toggle>
       </CardActions>
     </Toggle>
   </Card>);
 }
 
 SingleFileManager.propTypes = {
-  item: PropTypes.object
+  item: PropTypes.object.isRequired,
+  ascend: PropTypes.func
 };
 
 export default SingleFileManager;

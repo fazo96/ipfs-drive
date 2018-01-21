@@ -17,5 +17,5 @@ export function updatePathInfo(path) {
 export const emptyHash = 'QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn';
 
 export function loadRootHash() {
-  return window.localStorage.getItem('ipfsDriveRootHash') || emptyHash;
+  return emptyHash;
 }

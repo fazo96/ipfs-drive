@@ -12,7 +12,7 @@ Works on any existing IPFS folder.
 - copy URL for any file or folder
 - create folders
 - delete, move, rename, copy files and folders
-- download files on click
+- view and download files on click
 - clear button to quickly start from empty
 - picks up where you left off
 - undo/redo using back/forward browser buttons. Changes the URL every time you make a modification
@@ -33,6 +33,7 @@ This is what's changed between the latest build and master.
 - gives some feedback while analyzing folder contents
 - upgraded to ipfs 0.27
 - when opening a file it shows some info, allows copying hash or opening on gateway
+- new welcome page
 
 #### Known Issues
 
@@ -40,6 +41,7 @@ This is what's currently known as broken in master.
 
 - some javascript errors outputted by ipfs in the browser console
 - sluggish interface in huge folders
+- wonky file/folder detection
 
 #### Next Release
 
@@ -77,6 +79,10 @@ This is what I'd like to work on next, in no particular order:
 These are longer term ideas that imply a change in scope for the project.
 
 - Feeds: feeds will be a way to share stuff. Other users will be able to subscribe to your feed with a link and they'll see what you publish. This would turn Drive into a bit of a social media platform, or it could just be a way to publish dynamic content.
+  - create, delete, post to your feeds
+  - advertise feeds and also check for feeds being advertised right now
+  - seed/pin feeds
 - real time file managing with other people
 - integrated content viewing and editing, for example playing videos
+- manage orbit-db databases
 - turn this into a complete IPFS Web UI

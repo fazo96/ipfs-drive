@@ -3,10 +3,9 @@ import {
   analyze
 } from '../utils/ipfs';
 import { call, put, spawn } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
 import { pathToArrayOfObjects } from '../utils/path';
 import { setContent, analyzeLink, linkAnalysis, fetchContent } from '../actions/filesActions';
-import { updatePathInfo, loadRootHash } from '../actions/pathActions';
+import { updatePathInfo } from '../actions/pathActions';
 import { notifyError } from '../actions/error';
 
 export function* watchFetchContent(action) {
@@ -31,8 +30,6 @@ export function* watchLocationChange(action) {
   const { pathname } = action.payload;
   if (pathname.indexOf('/ipfs/') === 0) {
     yield call(watchSetPath, { path: pathname });
-  } else if (pathname === '/') {
-    yield put(push('/ipfs/' + loadRootHash()));
   }
 }
 
@@ -41,7 +38,6 @@ function* watchSetPath(action) {
   // TODO: Save latest path
   const path = pathToArrayOfObjects(actionPath);
   if (path.length > 0) {
-    yield call(saveRootHash, path[0].hash);
     // Resolve relative
     const hash = path[0].hash;
     const analysis = yield call(analyze, { hash });
@@ -69,8 +65,4 @@ function* watchSetPath(action) {
     yield put(updatePathInfo(newPath));
     yield put(fetchContent(newPath));
   }
-}
-
-function saveRootHash(hash) {
-  window.localStorage.setItem('ipfsDriveRootHash', hash);
 }
