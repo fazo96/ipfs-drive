@@ -25,16 +25,6 @@ This is the latest development build with known issues.
 
 See the CHANGELOG.md file for information about features and known issues in the latest build.
 
-### What's in master
-
-This is what's changed between the latest build and master.
-
-- general improvements to the code, stability and performance
-- gives some feedback while analyzing folder contents
-- upgraded to ipfs 0.27
-- when opening a file it shows some info, allows copying hash or opening on gateway
-- new welcome page
-
 #### Known Issues
 
 This is what's currently known as broken in master.
@@ -45,22 +35,24 @@ This is what's currently known as broken in master.
 
 #### Next Release
 
-This is other stuff I'd like to implement before releasing the next version.
+This is stuff I'd like to implement next.
 
-- improve performance in huge folders (maybe with infinite scroll). Improve item metadata analysis
+- improve performance in huge folders somehow
+- report progress in the most detailed way possibile during IPFS operations
+- handle errors as much as possible
+- remove sourcemaps from prod release
 
 ### Additional feature wishlist
 
 This is what I'd like to work on next, in no particular order:
 
 - write tests
-- configurable download strategy: currently uses client side download with js-ipfs. It should also allow HTTP downloads via gateway. On firefox disable client side downloads
+- "upload" local files
+- configurable download strategy (streaming via js or http via gateway)
 - configurable connectivity to go-ipfs for persistence and an overall improved experience
-- report progress in the most detailed way possibile during IPFS operations
 - IPNS support, of course the underlying ipfs implementation must support it
 - splitting the JS to avoid 6MB brick and maybe to better share code between versions. It should incrementally load the app
 - offline support with service workers
-- "upload" local files
 - some way to check for updates reliably, probably an OrbitDB Feed
 - show bitswap stats and maybe some kind of controls over IPFS
 - load google static assets stuff (fonts) locally or from ipfs links
