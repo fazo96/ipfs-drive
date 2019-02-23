@@ -3,14 +3,12 @@ import {
   ADD,
   REMOVE,
   RENAME,
-  FETCH_CONTENT
+  FETCH_CONTENT,
 } from '../constants/actionTypes';
 import initialState from './initialState';
 
-export default function operationProgressReducer(state = initialState.currentOperation, action){
-
+export default function operationProgressReducer(state = initialState.currentOperation, action) {
   switch (action.type) {
-
     case FETCH_CONTENT:
     case ADD:
     case REMOVE:
@@ -21,6 +19,5 @@ export default function operationProgressReducer(state = initialState.currentOpe
       return Object.assign({}, state, { active: false });
 
     default: return state;
-
   }
 }

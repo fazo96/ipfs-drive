@@ -1,16 +1,16 @@
+import { call, put, select } from 'redux-saga/effects';
 import {
   buildNewPath,
   createItem,
   addItemToDirectory,
   removeLink,
-  renameLink
+  renameLink,
 } from '../utils/ipfs';
-import { call, put, select } from 'redux-saga/effects';
 import { setPath } from '../actions/pathActions';
 import { notifyError } from '../actions/error';
 import { analyzeLink } from '../actions/filesActions';
 
-function* addLinkSaga(item){
+function* addLinkSaga(item) {
   let newItem;
   const state = yield select();
   // Prepare item
@@ -27,7 +27,7 @@ function* addLinkSaga(item){
   } else {
     // Prepare path info
     const currentPath = state.path;
-    const dirHash = currentPath[currentPath.length-1].hash;
+    const dirHash = currentPath[currentPath.length - 1].hash;
     // Add the item and update path
     const newHash = yield call(addItemToDirectory, dirHash, newItem);
     const path = yield call(buildNewPath, currentPath, newHash);
@@ -37,21 +37,21 @@ function* addLinkSaga(item){
   }
 }
 
-export function* watchAdd(action){
+export function* watchAdd(action) {
   yield addLinkSaga(action.item);
 }
 
-export function* watchPaste(){
+export function* watchPaste() {
   const state = yield select();
   yield addLinkSaga(state.clipboard);
 }
 
-export function* watchRename(action){
+export function* watchRename(action) {
   const { name, newName } = action;
   const state = yield select();
   const currentPath = state.path;
-  const dirHash = currentPath[currentPath.length-1].hash;
-  const files = state.files;
+  const dirHash = currentPath[currentPath.length - 1].hash;
+  const { files } = state;
   const newHash = yield call(renameLink, dirHash, files, name, newName);
   // Analyze new item
   yield put(analyzeLink({ hash: newHash }));
@@ -60,19 +60,19 @@ export function* watchRename(action){
   yield put(setPath(path));
 }
 
-export function* watchRemove(action){
+export function* watchRemove(action) {
   yield removeLinkSaga(action.name);
 }
 
-export function* watchCut(action){
+export function* watchCut(action) {
   yield removeLinkSaga(action.item.name);
 }
 
 function* removeLinkSaga(name) {
   const state = yield select();
   const currentPath = state.path;
-  const dirHash = currentPath[currentPath.length-1].hash;
-  const files = state.files;
+  const dirHash = currentPath[currentPath.length - 1].hash;
+  const { files } = state;
   const newHash = yield call(removeLink, dirHash, files, name);
   // Update path
   const path = yield call(buildNewPath, currentPath, newHash);

@@ -1,12 +1,11 @@
 import {
   CUT,
   COPY,
-  CLEAR_CLIPBOARD
+  CLEAR_CLIPBOARD,
 } from '../constants/actionTypes';
 import initialState from './initialState';
 
-export default function clipboardReducer(state = initialState.clipboard, action){
-
+export default function clipboardReducer(state = initialState.clipboard, action) {
   switch (action.type) {
     case CUT:
     case COPY:

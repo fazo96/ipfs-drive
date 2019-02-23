@@ -1,17 +1,17 @@
 
-import * as types from '../constants/actionTypes';
 import { takeLatest, takeEvery } from 'redux-saga/effects';
+import * as types from '../constants/actionTypes';
 import {
   watchFetchContent,
   watchLocationChange,
-  watchAnalyzeLink
+  watchAnalyzeLink,
 } from './read';
 import {
   watchAdd,
   watchRemove,
   watchRename,
   watchCut,
-  watchPaste
+  watchPaste,
 } from './write';
 
 export default function* saga() {

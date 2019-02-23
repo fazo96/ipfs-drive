@@ -2,6 +2,6 @@ import * as types from '../constants/actionTypes';
 
 export function clearNotification() {
   return {
-    type: types.CLEAR_NOTIFICATION
+    type: types.CLEAR_NOTIFICATION,
   };
 }

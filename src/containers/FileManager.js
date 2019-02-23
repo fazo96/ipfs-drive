@@ -1,21 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
-import { openModal, closeModal } from "../actions/addModalActions";
+import { openModal, closeModal } from '../actions/addModalActions';
 import { setPath } from '../actions/pathActions';
 import { add } from '../actions/writeActions';
 import { analyzeLink } from '../actions/filesActions';
 import { pathToArrayOfObjects, getFilePath } from '../utils/path';
-import { cut, copy, remove, rename, share } from '../actions/folderItemActions';
+import {
+  cut, copy, remove, rename, share,
+} from '../actions/folderItemActions';
 import Rename from '../components/Rename';
 
 class FileManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      renamingItem: null
+      renamingItem: null,
     };
   }
 
@@ -45,7 +47,7 @@ class FileManager extends React.Component {
     this.props.rename(renamingItem.name, newName);
   }
 
-  render () {
+  render() {
     const {
       files,
       addModalOpen,
@@ -60,23 +62,27 @@ class FileManager extends React.Component {
     } = this.props;
     const { renamingItem } = this.state;
     const showParent = pathToArrayOfObjects(location.pathname).length > 1;
-    const folderViewer = (<FolderViewer
-      items={files}
-      showParent={showParent}
-      onClickItem={this.onClickitem.bind(this)}
-      handleAscend={this.ascend.bind(this)}
-      handleCut={cut}
-      handleCopy={copy}
-      handleRemove={remove}
-      handleRename={this.handleRename.bind(this)}
-      handleNewItem={openAddModal}
-      handleShare={share}
-    />);
-    return (<div>
-      { folderViewer }
-      <Rename open={renamingItem != null} handleChoose={this.rename.bind(this)} item={renamingItem} />
-      <Add open={addModalOpen} handleClose={closeAddModal} handleAdd={add}/>
-    </div>);
+    const folderViewer = (
+      <FolderViewer
+        items={files}
+        showParent={showParent}
+        onClickItem={this.onClickitem.bind(this)}
+        handleAscend={this.ascend.bind(this)}
+        handleCut={cut}
+        handleCopy={copy}
+        handleRemove={remove}
+        handleRename={this.handleRename.bind(this)}
+        handleNewItem={openAddModal}
+        handleShare={share}
+      />
+    );
+    return (
+      <div>
+        { folderViewer }
+        <Rename open={renamingItem != null} handleChoose={this.rename.bind(this)} item={renamingItem} />
+        <Add open={addModalOpen} handleClose={closeAddModal} handleAdd={add} />
+      </div>
+    );
   }
 }
 
@@ -98,7 +104,7 @@ FileManager.propTypes = {
   share: PropTypes.func,
   analyzeLink: PropTypes.func,
   notification: PropTypes.object,
-  clearNotification: PropTypes.func
+  clearNotification: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -108,11 +114,11 @@ function mapStateToProps(state) {
     loading: state.currentOperation.active,
     path: state.path,
     notification: state.notification,
-    location: state.routing.location
+    location: state.routing.location,
   };
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return {
     add: obj => dispatch(add(obj)),
     closeAddModal: () => dispatch(closeModal()),
@@ -129,5 +135,5 @@ function mapDispatchToProps(dispatch){
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(FileManager);

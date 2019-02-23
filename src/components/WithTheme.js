@@ -7,7 +7,7 @@ function WithTheme({ children }) {
 }
 
 WithTheme.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)])
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 };
 
 export default WithTheme;

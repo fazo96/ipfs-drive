@@ -3,12 +3,11 @@
 import {
   NOTIFY,
   CLEAR_NOTIFICATION,
-  SHARE
+  SHARE,
 } from '../constants/actionTypes';
 import initialState from './initialState';
 
-export default function notificationReducer(state = initialState.notification, action){
-
+export default function notificationReducer(state = initialState.notification, action) {
   switch (action.type) {
     case CLEAR_NOTIFICATION:
       return Object.assign({}, initialState.notification);
@@ -16,13 +15,13 @@ export default function notificationReducer(state = initialState.notification, a
     case SHARE:
       return {
         open: true,
-        message: 'Link copied to clipboard'
+        message: 'Link copied to clipboard',
       };
 
     case NOTIFY:
       return {
         open: true,
-        message: action.message
+        message: action.message,
       };
 
     default:

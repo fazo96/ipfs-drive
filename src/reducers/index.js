@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
   clipboard,
   currentOperation,
   notification,
-  routing: routerReducer
+  routing: routerReducer,
 });
 
 export default rootReducer;

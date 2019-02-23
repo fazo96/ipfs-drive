@@ -22,7 +22,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 const iconButtonElement = (
   <IconButton
-    touch={true}
+    touch
     tooltip="Edit"
     tooltipPosition="bottom-left"
   >
@@ -30,29 +30,35 @@ const iconButtonElement = (
   </IconButton>
 );
 
-const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handleShare, handleRename }) => {
-  const url = window.location.href + '/' + encodeURIComponent(item.name || '');
+const FolderItem = ({
+  item, onClick, handleCut, handleCopy, handleRemove, handleShare, handleRename,
+}) => {
+  const url = `${window.location.href}/${encodeURIComponent(item.name || '')}`;
   const analyzed = item.size > 0 && typeof item.folder === 'boolean';
   const analyzing = !analyzed && item.analyzing;
-  const leftIcon = analyzed ? (item.folder ? <FileFolderIcon /> : <InsertDriveFileIcon />) : (analyzing ? <SettingsIcon /> : <WarningIcon/>);
-  const secondaryText = analyzed ? 'Size: ' + filesize(item.size) : (analyzing ? 'Searching IPFS...' : 'Metadata not available');
-  const rightIconButton = (<IconMenu iconButtonElement={iconButtonElement}>
-    <CopyToClipboard text={url} onClick={() => handleShare(item)}>
-      <MenuItem primaryText="Share URL" leftIcon={<ShareIcon />} onClick={() => handleShare(item)}/>
-    </CopyToClipboard>
-    <Divider />
-    <MenuItem primaryText="Rename" leftIcon={<RenameIcon />} onClick={() => handleRename(item)}/>
-    <MenuItem primaryText="Cut" leftIcon={<CutIcon />} onClick={() => handleCut(item)}/>
-    <MenuItem primaryText="Copy" leftIcon={<CopyIcon />} onClick={() => handleCopy(item)}/>
-    <MenuItem primaryText="Delete" leftIcon={<DeleteIcon />} onClick={() => handleRemove(item)}/>
-  </IconMenu>);
-  return (<ListItem
-    leftAvatar={<Avatar icon={leftIcon} />}
-    rightIconButton={rightIconButton}
-    primaryText={item.name || '(No Name)'}
-    secondaryText={secondaryText}
-    onClick={() => onClick(item)}
-  />);
+  const leftIcon = analyzed ? (item.folder ? <FileFolderIcon /> : <InsertDriveFileIcon />) : (analyzing ? <SettingsIcon /> : <WarningIcon />);
+  const secondaryText = analyzed ? `Size: ${filesize(item.size)}` : (analyzing ? 'Searching IPFS...' : 'Metadata not available');
+  const rightIconButton = (
+    <IconMenu iconButtonElement={iconButtonElement}>
+      <CopyToClipboard text={url} onClick={() => handleShare(item)}>
+        <MenuItem primaryText="Share URL" leftIcon={<ShareIcon />} onClick={() => handleShare(item)} />
+      </CopyToClipboard>
+      <Divider />
+      <MenuItem primaryText="Rename" leftIcon={<RenameIcon />} onClick={() => handleRename(item)} />
+      <MenuItem primaryText="Cut" leftIcon={<CutIcon />} onClick={() => handleCut(item)} />
+      <MenuItem primaryText="Copy" leftIcon={<CopyIcon />} onClick={() => handleCopy(item)} />
+      <MenuItem primaryText="Delete" leftIcon={<DeleteIcon />} onClick={() => handleRemove(item)} />
+    </IconMenu>
+  );
+  return (
+    <ListItem
+      leftAvatar={<Avatar icon={leftIcon} />}
+      rightIconButton={rightIconButton}
+      primaryText={item.name || '(No Name)'}
+      secondaryText={secondaryText}
+      onClick={() => onClick(item)}
+    />
+  );
 };
 
 FolderItem.propTypes = {
@@ -62,7 +68,7 @@ FolderItem.propTypes = {
   handleCopy: PropTypes.func,
   handleRemove: PropTypes.func,
   handleShare: PropTypes.func,
-  handleRename: PropTypes.func
+  handleRename: PropTypes.func,
 };
 
 export default FolderItem;

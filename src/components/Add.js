@@ -9,17 +9,17 @@ import MenuItem from 'material-ui/MenuItem';
 const types = {
   plainText: 'plainText',
   fromHash: 'fromHash',
-  emptyFolder: 'emptyFolder'
+  emptyFolder: 'emptyFolder',
 };
 
 class Add extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       name: '',
       content: '',
       hash: '',
-      type: types.fromHash
+      type: types.fromHash,
     };
   }
 
@@ -27,7 +27,7 @@ class Add extends React.Component {
     this.setState({
       type: value,
       content: '',
-      hash: ''
+      hash: '',
     });
   }
 
@@ -44,7 +44,7 @@ class Add extends React.Component {
   }
 
   add() {
-    let obj = { name: this.state.name };
+    const obj = { name: this.state.name };
     switch (this.state.type) {
       case types.plainText:
         obj.content = this.state.content;
@@ -63,58 +63,60 @@ class Add extends React.Component {
   renderAdditionalFields() {
     switch (this.state.type) {
       case types.plainText:
-        return <TextField floatingLabelText="Content (Text)" name="content" fullWidth={true} rows={3} value={this.state.content} onChange={this.handleChangeFileContent.bind(this)}/>;
+        return <TextField floatingLabelText="Content (Text)" name="content" fullWidth rows={3} value={this.state.content} onChange={this.handleChangeFileContent.bind(this)} />;
       case types.fromHash:
-        return <TextField floatingLabelText="Multihash" name="multihash" fullWidth={true} value={this.state.hash} onChange={this.handleChangeHash.bind(this)}/>;
+        return <TextField floatingLabelText="Multihash" name="multihash" fullWidth value={this.state.hash} onChange={this.handleChangeHash.bind(this)} />;
       default:
-        return <div/>;
+        return <div />;
     }
   }
 
-  render () {
-    const {open, handleClose} = this.props;
+  render() {
+    const { open, handleClose } = this.props;
     const actions = [
       <FlatButton
         key="cancel"
         label="Cancel"
-        primary={true}
+        primary
         onClick={handleClose}
       />,
       <FlatButton
         key="save"
         label="Save"
-        primary={true}
+        primary
         onClick={this.add.bind(this)}
       />,
     ];
 
-    return (<Dialog
-      title="Add Something"
-      actions={actions}
-      modal={false}
-      open={open}
-      onRequestClose={handleClose}
-    >
-      <TextField autoFocus floatingLabelText="Name" name="name" fullWidth={true} value={this.state.name} onChange={this.handleChangeName.bind(this)}/>
-      <SelectField
-        floatingLabelText="Type"
-        value={this.state.type}
-        onChange={this.handleChangeType.bind(this)}
-        fullWidth={true}
+    return (
+      <Dialog
+        title="Add Something"
+        actions={actions}
+        modal={false}
+        open={open}
+        onRequestClose={handleClose}
       >
-        <MenuItem value={types.fromHash} primaryText="From Hash" />
-        <MenuItem value={types.plainText} primaryText="Plain Text" />
-        <MenuItem value={types.emptyFolder} primaryText="Empty Folder" />
-      </SelectField>
-      {this.renderAdditionalFields()}
-    </Dialog>);
+        <TextField autoFocus floatingLabelText="Name" name="name" fullWidth value={this.state.name} onChange={this.handleChangeName.bind(this)} />
+        <SelectField
+          floatingLabelText="Type"
+          value={this.state.type}
+          onChange={this.handleChangeType.bind(this)}
+          fullWidth
+        >
+          <MenuItem value={types.fromHash} primaryText="From Hash" />
+          <MenuItem value={types.plainText} primaryText="Plain Text" />
+          <MenuItem value={types.emptyFolder} primaryText="Empty Folder" />
+        </SelectField>
+        {this.renderAdditionalFields()}
+      </Dialog>
+    );
   }
 }
 
 Add.propTypes = {
   handleClose: PropTypes.func,
   handleAdd: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };
 
 export default Add;

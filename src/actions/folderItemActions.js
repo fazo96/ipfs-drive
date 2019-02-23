@@ -4,7 +4,7 @@ import { removeLink, renameLink } from './writeActions';
 export function share(item) {
   return {
     type: types.SHARE,
-    item
+    item,
   };
 }
 
@@ -15,7 +15,7 @@ export function cut(item) {
 export function copy(item) {
   return {
     type: types.COPY,
-    item
+    item,
   };
 }
 
