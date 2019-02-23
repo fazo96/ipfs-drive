@@ -1,30 +1,36 @@
 import dagPB from 'ipld-dag-pb';
 import multihashes from 'multihashes';
+import CID from 'cids';
 
 export const folderData = Buffer.from(new Uint8Array([8, 1]));
 
 export function createDAGLink(name, length, hash) {
-  return new Promise(fullfill => {
+  return new Promise((resolve, reject)=> {
     // hash can be buffer or string
-    dagPB.DAGLink.create(name, length, hash, (err, x) => fullfill(x));
+    dagPB.DAGLink.create(name, length, hash, (err, x) => err ? reject(err) : resolve(x));
   });
 }
 
 export async function getIPFS() {
-  let ipfs = window.ipfs;
-  if (!ipfs) ipfs = await create();
-  if (typeof ipfs.enable === 'function') {
+  let ipfs = window.ipfs_enabled || window.ipfs;
+  if (!ipfs) {
+    ipfs = window.ipfs_enabled = await create();
+  } else if (typeof ipfs.enable === 'function') {
     // support window.ipfs from IPFS companion
     // https://github.com/ipfs-shipyard/ipfs-companion/blob/master/docs/window.ipfs.md
-    ipfs = await window.ipfs.enable({
-      commands: ['object']
-    })
+    try {
+      ipfs = window.ipfs_enabled = await window.ipfs.enable({
+        commands: ['object', 'add']
+      })
+    } catch (error) {
+      ipfs = window.ipfs_enabled = await create();
+    }
   }
   return ipfs
 }
 
 export async function create () {
-  const IPFS = await import('ipfs');
+  const IPFS = (await import('ipfs')).default
   const node = new IPFS({
     store: window.location.pathname,
     config: {
@@ -48,7 +54,7 @@ export async function readLinks (hash) {
   return links.map(link => {
     return {
       name: link.name,
-      hash: multihashes.toB58String(link.multihash),
+      hash: link.cid.toBaseEncodedString(),
       size: link.size
     };
   });
@@ -72,10 +78,11 @@ export function fileWithName(files, name) {
 
 export async function addItemToDirectory(directoryHash, item) {
   const newFileDagNode = await createDAGNode(item.hash);
-  const dagLink = await createDAGLink(item.name, newFileDagNode.size, newFileDagNode.multihash);
+  const cid = new CID(item.hash)
+  const dagLink = await createDAGLink(item.name, newFileDagNode.size, cid);
   const ipfs = await getIPFS();
-  const newDAGNode = await ipfs.object.patch.addLink(directoryHash, dagLink);
-  return multihashes.toB58String(newDAGNode.multihash);
+  const newCID = await ipfs.object.patch.addLink(directoryHash, dagLink);
+  return newCID.toBaseEncodedString()
 }
 
 export async function createItem(name, content) {
@@ -84,7 +91,7 @@ export async function createItem(name, content) {
     content
   };
   const ipfs = await getIPFS();
-  const result = await ipfs.files.add([item]);
+  const result = await ipfs.add([item]);
   if (result.length === 1) {
     return {
       name: result[0].path,
@@ -109,12 +116,9 @@ export async function buildNewPath(currentPath, newCurrentFolderHash) {
     const i = parseInt(index);
     let folder = reversedPath[i];
     const hash = multihashes.fromB58String(folder.hash);
-    let newDAGNode = null;
+    let newCID = new CID(newCurrentFolderHash)
     const ipfs = await getIPFS();
-    if (i === 0) {
-      // Current dir, just update from new dag node
-      newDAGNode = await createDAGNode(newCurrentFolderHash);
-    } else {
+    if (i !== 0) {
       // Not current dir, this directory is higher in the tree. Need to replace child link
       const child = newPathReversed[i-1];
       const childHash = multihashes.fromB58String(child.hash);
@@ -123,14 +127,16 @@ export async function buildNewPath(currentPath, newCurrentFolderHash) {
       const oldChild = fileWithName(currentContents, child.name);
       const oldDagLink = await createDAGLink(child.name, oldChild.size, multihashes.fromB58String(oldChild.hash));
       // remove old link
-      newDAGNode = await ipfs.object.patch.rmLink(hash, oldDagLink);
+      newCID = await ipfs.object.patch.rmLink(hash, oldDagLink);
       // prepare new child link
       const dagLink = await createDAGLink(child.name, child.size, childHash);
       // add new child link
-      newDAGNode = await ipfs.object.patch.addLink(newDAGNode.multihash, dagLink);
+      newCID = await ipfs.object.patch.addLink(newCID.toBaseEncodedString(), dagLink);
     }
+    const newCIDString = newCID.toBaseEncodedString()
+    const newDAGNode = createDAGNode(newCIDString)
     newPathReversed.push(Object.assign({}, folder, {
-      hash: multihashes.toB58String(newDAGNode.multihash),
+      hash: newCIDString,
       size: newDAGNode.size
     }));
   }
@@ -141,8 +147,8 @@ export async function removeLink(hash, files, name) {
   const link = fileWithName(files, name);
   const dagLink = await createDAGLink(name, link.size, link.hash);
   const ipfs = await getIPFS();
-  const newDAGNode = await ipfs.object.patch.rmLink(hash, dagLink);
-  return multihashes.toB58String(newDAGNode.multihash);
+  const newCID = await ipfs.object.patch.rmLink(hash, dagLink);
+  return newCID.toBaseEncodedString()
 }
 
 export async function renameLink(hash, files, name, newName){
@@ -150,10 +156,10 @@ export async function renameLink(hash, files, name, newName){
   const link = fileWithName(files, name);
   const oldDagLink = await createDAGLink(name, link.size, link.hash);
   const ipfs = await getIPFS();
-  let newDAGNode = await ipfs.object.patch.rmLink(hash, oldDagLink);
-  const newDAGNodeHash = multihashes.toB58String(newDAGNode.multihash);
+  let newCID = await ipfs.object.patch.rmLink(hash, oldDagLink);
   // Add new link (like old one but renamed)
   const newDagLink = await createDAGLink(newName, link.size, link.hash);
-  newDAGNode = await ipfs.object.patch.addLink(newDAGNodeHash, newDagLink);
-  return multihashes.toB58String(newDAGNode.multihash);
+  newCID = await ipfs.object.patch.addLink(newCID.toBaseEncodedString(), newDagLink);
+  return newCID.toBaseEncodedString()
 }
+
