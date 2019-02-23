@@ -11,7 +11,16 @@ export function createDAGLink(name, length, hash) {
 }
 
 export async function getIPFS() {
-  return window.ipfs ? window.ipfs : window.ipfs = await create();
+  let ipfs = window.ipfs;
+  if (!ipfs) ipfs = await create();
+  if (typeof ipfs.enable === 'function') {
+    // support window.ipfs from IPFS companion
+    // https://github.com/ipfs-shipyard/ipfs-companion/blob/master/docs/window.ipfs.md
+    ipfs = await window.ipfs.enable({
+      commands: ['object']
+    })
+  }
+  return ipfs
 }
 
 export async function create () {
