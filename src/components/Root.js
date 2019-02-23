@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { ConnectedRouter } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import App from '../containers/App';
+import { hot } from 'react-hot-loader/root';
 
-export default class Root extends Component {
+class Root extends Component {
   render() {
     const { store, history } = this.props;
     return (
@@ -21,3 +22,5 @@ Root.propTypes = {
   store: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired
 };
+
+export default hot(Root)
