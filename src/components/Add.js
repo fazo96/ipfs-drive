@@ -118,7 +118,12 @@ class Add extends React.PureComponent {
 
   render() {
     const { open, handleClose } = this.props;
-    const { name, type, content, hash } = this.state;
+    const {
+      name,
+      type,
+      content,
+      hash,
+    } = this.state;
     const canSave = typeof name === 'string'
       && name.length > 0
       && Object.values(types).indexOf(type) >= 0
@@ -132,7 +137,7 @@ class Add extends React.PureComponent {
       <Dialog
         modal={false}
         open={open}
-        onRequestClose={handleClose}
+        onClose={handleClose}
       >
         <DialogTitle>Add Something</DialogTitle>
         <DialogContent>

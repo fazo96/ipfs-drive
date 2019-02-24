@@ -11,28 +11,26 @@ import {
   clearNotification as clearNotificationAction,
 } from '../actions/notificationActions';
 
-const App = ({ notification, clearNotification, push }) => {
-  return (
-    <div>
-      <TitleBar onClickBrandIcon={() => push('/')} />
-      <Switch>
-        <Route path="/ipfs/" component={FileManagementPage} />
-        <Route path="/" component={Homepage} />
-      </Switch>
-      <Snackbar
-        open={notification.open}
-        message={notification.message || ''}
-        onClose={clearNotification}
-        autoHideDuration={4000}
-      />
-    </div>
-  );
-};
+const App = ({ notification, clearNotification, push }) => (
+  <div>
+    <TitleBar onClickBrandIcon={() => push('/')} />
+    <Switch>
+      <Route path="/ipfs/" component={FileManagementPage} />
+      <Route path="/" component={Homepage} />
+    </Switch>
+    <Snackbar
+      open={notification.open}
+      message={notification.message || ''}
+      onClose={clearNotification}
+      autoHideDuration={4000}
+    />
+  </div>
+);
 
 App.propTypes = {
   notification: PropTypes.shape({
-    open: 'string',
-    message: 'string',
+    open: PropTypes.bool,
+    message: PropTypes.string,
   }).isRequired,
   clearNotification: PropTypes.func.isRequired,
   push: PropTypes.func.isRequired,
