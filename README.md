@@ -37,19 +37,17 @@ This is what's currently known as broken in master.
 
 This is stuff I'd like to implement next.
 
+- "upload" local files
 - improve performance in huge folders somehow
 - report progress in the most detailed way possibile during IPFS operations
 - handle errors as much as possible
-- remove sourcemaps from prod release
 
 ### Additional feature wishlist
 
 This is what I'd like to work on next, in no particular order:
 
 - write tests
-- "upload" local files
 - configurable download strategy (streaming via js or http via gateway)
-- configurable connectivity to go-ipfs for persistence and an overall improved experience
 - IPNS support, of course the underlying ipfs implementation must support it
 - splitting the JS to avoid 6MB brick and maybe to better share code between versions. It should incrementally load the app
 - offline support with service workers
@@ -58,11 +56,11 @@ This is what I'd like to work on next, in no particular order:
 - load google static assets stuff (fonts) locally or from ipfs links
 - show file information like an icon based on extension, file size etc
 - show network stats on files, like availability
-- if a folder has an index.html, then it's a website/app and the index should open on click
+- if a folder has an index.html, then it's a website/app and the index should open on click. Read the metadata to load name, description and icon for PWAs
 - basic or configurable integration with other IPFS static apps to open files: for example open md file in a markdown renderer
 - multiple file/folder delete, move, copy
 - pinning. It should start a "background job" that notifies the user when done, of course the underlying ipfs implementation must support it
-- download folder as archive
+- download folder as archive if possible
 - some way to guarantee and check availability
 - simple search
 
