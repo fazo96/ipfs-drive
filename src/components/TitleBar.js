@@ -21,9 +21,27 @@ const TitleBar = ({ onClickBrandIcon, classes }) => (
     position="static"
   >
     <Toolbar>
-      <IconButton onClick={onClickBrandIcon}><ExploreIcon /></IconButton>
-      <Typography variant="h6" className={classes.grow}>IPFS Drive</Typography>
-      <IconButton href="https://github.com/fazo96/ipfs-drive"><GitHubIcon /></IconButton>
+      <IconButton
+        color="inherit"
+        onClick={onClickBrandIcon}
+      >
+        <ExploreIcon />
+      </IconButton>
+      <Typography
+        color="inherit"
+        variant="h6"
+        className={classes.grow}
+      >
+        IPFS Drive
+      </Typography>
+      <IconButton
+        color="inherit"
+        component="a"
+        target="_vblank"
+        href="https://github.com/fazo96/ipfs-drive"
+      >
+        <GitHubIcon />
+      </IconButton>
     </Toolbar>
   </AppBar>
 );
@@ -33,4 +51,4 @@ TitleBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TitleBar);
+export default withStyles(styles)(React.memo(TitleBar));

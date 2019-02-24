@@ -29,6 +29,8 @@ function Homepage({ push }) {
         <List>
           <ListItem
             button
+            component="a"
+            target="_vblank"
             href="https://ipfs.io"
           >
             <Avatar><HelpIcon /></Avatar>
@@ -49,6 +51,8 @@ function Homepage({ push }) {
           </ListItem>
           <ListItem
             button
+            component="a"
+            target="_vblank"
             href="https://github.com/fazo96/ipfs-drive"
           >
             <Avatar><GitHubIcon /></Avatar>
@@ -59,17 +63,20 @@ function Homepage({ push }) {
           </ListItem>
           <ListItem
             button
+            component="a"
+            target="_vblank"
             href="https://github.com/fazo96/ipfs-drive/issues/new"
           >
             <Avatar><WarningIcon /></Avatar>
             <ListItemText
               primary="Warning!"
-              secondary={
+              secondary={(
                 <span>
                   This is a development version, there are missing features and bugs.
-                  <br/>Let us know on GitHub if you run into any issues
+                  <br />
+                  Let us know on GitHub if you run into any issues
                 </span>
-              }
+              )}
             />
           </ListItem>
         </List>
@@ -91,4 +98,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   undefined,
   mapDispatchToProps,
-)(Homepage);
+)(React.memo(Homepage));

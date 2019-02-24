@@ -19,15 +19,23 @@ const types = {
   emptyFolder: 'emptyFolder',
 };
 
-class Add extends React.Component {
+const defaultFormValues = {
+  name: '',
+  content: '',
+  hash: '',
+  type: types.fromHash,
+};
+
+class Add extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      content: '',
-      hash: '',
-      type: types.fromHash,
+      ...defaultFormValues,
     };
+  }
+
+  reset = () => {
+    this.setState(defaultFormValues);
   }
 
   handleChangeType = (event) => {
@@ -51,28 +59,58 @@ class Add extends React.Component {
   }
 
   add = () => {
-    const obj = { name: this.state.name };
-    switch (this.state.type) {
+    const { handleAdd } = this.props;
+    const {
+      name,
+      type,
+      content,
+      hash,
+    } = this.state;
+    const obj = { name };
+    switch (type) {
       case types.plainText:
-        obj.content = this.state.content;
+        obj.content = content;
         break;
       case types.fromHash:
-        obj.hash = this.state.hash;
+        obj.hash = hash;
         break;
       case types.emptyFolder: break;
       default:
         return;
     }
     this.setState({ hash: '', content: '' });
-    this.props.handleAdd(obj);
+    handleAdd(obj);
+  }
+
+  handleClose = () => {
+    const { handleClose } = this.props;
+    handleClose();
+    this.reset();
   }
 
   renderAdditionalFields() {
-    switch (this.state.type) {
+    const { type, hash, content } = this.state;
+    switch (type) {
       case types.plainText:
-        return <TextField floatingLabelText="Content (Text)" name="content" fullWidth rows={3} value={this.state.content} onChange={this.handleChangeFileContent.bind(this)} />;
+        return (
+          <TextField
+            label="Content (Text)"
+            name="content"
+            fullWidth
+            rows={3}
+            value={content}
+            onChange={this.handleChangeFileContent}
+          />
+        );
       case types.fromHash:
-        return <TextField floatingLabelText="Multihash" name="multihash" fullWidth value={this.state.hash} onChange={this.handleChangeHash.bind(this)} />;
+        return (
+          <TextField
+            label="Multihash"
+            fullWidth
+            value={hash}
+            onChange={this.handleChangeHash}
+          />
+        );
       default:
         return <div />;
     }
@@ -80,6 +118,15 @@ class Add extends React.Component {
 
   render() {
     const { open, handleClose } = this.props;
+    const { name, type, content, hash } = this.state;
+    const canSave = typeof name === 'string'
+      && name.length > 0
+      && Object.values(types).indexOf(type) >= 0
+      && (
+        type === types.emptyFolder
+        || (type === types.plainText && Boolean(content))
+        || (type === types.fromHash && Boolean(hash))
+      );
 
     return (
       <Dialog
@@ -93,12 +140,12 @@ class Add extends React.Component {
             autoFocus
             fullWidth
             label="Name"
-            value={this.state.name}
-            onChange={this.handleChangeName.bind(this)}
+            value={name}
+            onChange={this.handleChangeName}
           />
           <Select
             label="Type"
-            value={this.state.type}
+            value={type}
             onChange={this.handleChangeType}
             fullWidth
           >
@@ -106,33 +153,32 @@ class Add extends React.Component {
             <MenuItem value={types.plainText}>Plain Text</MenuItem>
             <MenuItem value={types.emptyFolder}>Empty Folder</MenuItem>
           </Select>
-          <DialogActions>
-            <Button
-              color='primary'
-              key="cancel"
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>,
-            <Button
-              color='primary'
-              key="save"
-              onClick={this.add}
-            >
-              Save
-            </Button>
-          </DialogActions>
+          {this.renderAdditionalFields()}
         </DialogContent>
-        {this.renderAdditionalFields()}
+        <DialogActions>
+          <Button
+            onClick={this.handleClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!canSave}
+            onClick={this.add}
+          >
+            Save
+          </Button>
+        </DialogActions>
       </Dialog>
     );
   }
 }
 
 Add.propTypes = {
-  handleClose: PropTypes.func,
-  handleAdd: PropTypes.func,
-  open: PropTypes.bool,
+  handleClose: PropTypes.func.isRequired,
+  handleAdd: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
 };
 
 export default Add;

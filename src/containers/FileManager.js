@@ -4,12 +4,16 @@ import { connect } from 'react-redux';
 import FolderViewer from '../components/FolderViewer';
 import Add from '../components/Add';
 import { openModal, closeModal } from '../actions/addModalActions';
-import { setPath } from '../actions/pathActions';
-import { add } from '../actions/writeActions';
-import { analyzeLink } from '../actions/filesActions';
+import { setPath as setPathAction } from '../actions/pathActions';
+import { add as addAction } from '../actions/writeActions';
+import { analyzeLink as analyzeLinkAction } from '../actions/filesActions';
 import { pathToArrayOfObjects, getFilePath } from '../utils/path';
 import {
-  cut, copy, remove, rename, share,
+  cut as cutAction,
+  copy as copyAction,
+  remove as removeAction,
+  rename as renameAction,
+  share as shareAction,
 } from '../actions/folderItemActions';
 import Rename from '../components/Rename';
 
@@ -21,7 +25,7 @@ class FileManager extends React.Component {
     };
   }
 
-  onClickitem(item) {
+  onClickitem = (item) => {
     const { path, setPath, analyzeLink } = this.props;
     const analyzed = item.size > 0 && typeof item.folder === 'boolean';
     const analyzing = !analyzed && item.analyzing;
@@ -32,19 +36,20 @@ class FileManager extends React.Component {
     }
   }
 
-  ascend() {
+  ascend = () => {
     const { path, setPath } = this.props;
     setPath(getFilePath('..', path));
   }
 
-  handleRename(renamingItem) {
+  handleRename = (renamingItem) => {
     this.setState({ renamingItem });
   }
 
   rename = (newName) => {
+    const { rename } = this.props;
     const { renamingItem } = this.state;
     this.setState({ renamingItem: null });
-    this.props.rename(renamingItem.name, newName);
+    rename(renamingItem.name, newName);
   }
 
   render() {
@@ -66,12 +71,12 @@ class FileManager extends React.Component {
       <FolderViewer
         items={files}
         showParent={showParent}
-        onClickItem={this.onClickitem.bind(this)}
-        handleAscend={this.ascend.bind(this)}
+        onClickItem={this.onClickitem}
+        handleAscend={this.ascend}
         handleCut={cut}
         handleCopy={copy}
         handleRemove={remove}
-        handleRename={this.handleRename.bind(this)}
+        handleRename={this.handleRename}
         handleNewItem={openAddModal}
         handleShare={share}
       />
@@ -86,31 +91,31 @@ class FileManager extends React.Component {
             item={renamingItem}
           />
         )}
-        <Add open={addModalOpen} handleClose={closeAddModal} handleAdd={add} />
+        <Add
+          open={addModalOpen}
+          handleClose={closeAddModal}
+          handleAdd={add}
+        />
       </div>
     );
   }
 }
 
 FileManager.propTypes = {
-  files: PropTypes.array,
-  push: PropTypes.func,
-  addModalOpen: PropTypes.bool,
-  add: PropTypes.func,
-  openAddModal: PropTypes.func,
-  closeAddModal: PropTypes.func,
-  loading: PropTypes.bool,
-  setPath: PropTypes.func,
-  location: PropTypes.object,
-  path: PropTypes.arrayOf(PropTypes.object),
-  cut: PropTypes.func,
-  copy: PropTypes.func,
-  remove: PropTypes.func,
-  rename: PropTypes.func,
-  share: PropTypes.func,
-  analyzeLink: PropTypes.func,
-  notification: PropTypes.object,
-  clearNotification: PropTypes.func,
+  files: PropTypes.array.isRequired,
+  addModalOpen: PropTypes.bool.isRequired,
+  add: PropTypes.func.isRequired,
+  openAddModal: PropTypes.func.isRequired,
+  closeAddModal: PropTypes.func.isRequired,
+  setPath: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+  path: PropTypes.arrayOf(PropTypes.object).isRequired,
+  cut: PropTypes.func.isRequired,
+  copy: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  rename: PropTypes.func.isRequired,
+  share: PropTypes.func.isRequired,
+  analyzeLink: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -126,15 +131,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    add: obj => dispatch(add(obj)),
+    add: obj => dispatch(addAction(obj)),
     closeAddModal: () => dispatch(closeModal()),
-    setPath: path => dispatch(setPath(path)),
-    cut: item => dispatch(cut(item)),
-    copy: item => dispatch(copy(item)),
-    remove: item => dispatch(remove(item)),
-    rename: (name, newName) => dispatch(rename(name, newName)),
-    share: item => dispatch(share(item)),
-    analyzeLink: item => dispatch(analyzeLink(item)),
+    setPath: path => dispatch(setPathAction(path)),
+    cut: item => dispatch(cutAction(item)),
+    copy: item => dispatch(copyAction(item)),
+    remove: item => dispatch(removeAction(item)),
+    rename: (name, newName) => dispatch(renameAction(name, newName)),
+    share: item => dispatch(shareAction(item)),
+    analyzeLink: item => dispatch(analyzeLinkAction(item)),
     openAddModal: () => dispatch(openModal()),
   };
 }

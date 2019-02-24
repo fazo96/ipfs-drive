@@ -12,20 +12,26 @@ import filesize from 'filesize';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Toggle from './Toggle';
 
-function SingleFileManager({ item, ascend }) {
+function SingleFileManager({ item, ascend, handleShare }) {
   const { name, size, hash } = item;
   return (
     <Card style={{ margin: '2em auto', maxWidth: '30em' }}>
       <CardHeader
         title={name || 'Unnamed File'}
-        subtitle={`Size: ${filesize(size || 0)}`}
-        avatar={<Avatar icon={<InsertDriveFileIcon />} />}
+        subheader={`Size: ${filesize(size || 0)}`}
+        avatar={<Avatar><InsertDriveFileIcon /></Avatar>}
       />
       <Toggle showIf={!!hash}>
         <CardActions>
-          <Button href={`https://ipfs.io/ipfs/${hash}`}>Open in Gateway</Button>
+          <Button
+            component="a"
+            target="_vblank"
+            href={`https://ipfs.io/ipfs/${hash}`}
+          >
+            Open in Gateway
+          </Button>
           <CopyToClipboard text={hash}>
-            <Button>Copy Hash</Button>
+            <Button onClick={() => handleShare(item)}>Copy Hash</Button>
           </CopyToClipboard>
           <Toggle showIf={typeof ascend === 'function'}>
             <Button onClick={ascend}>View Parent</Button>
@@ -36,8 +42,13 @@ function SingleFileManager({ item, ascend }) {
   );
 }
 
+SingleFileManager.defaultProps = {
+  ascend: null,
+};
+
 SingleFileManager.propTypes = {
   item: PropTypes.object.isRequired,
+  handleShare: PropTypes.func.isRequired,
   ascend: PropTypes.func,
 };
 
