@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List } from 'material-ui/List';
+import { List } from '@material-ui/core';
 import FolderItem from './FolderItem';
 import Parent from './Parent';
 import EmptyItem from './EmptyItem';
@@ -32,10 +32,10 @@ const FolderViewer = (props) => {
     <div style={containerStyle}>
       <List style={itemStyle}>
         { showParent ? <Parent onClick={handleAscend} style={itemStyle} /> : <span /> }
-        { items.map((f, i) => (
+        { items.map(f => (
           <FolderItem
             item={f}
-            key={i}
+            key={f.hash}
             onClick={onClickItem}
             handleShare={handleShare}
             handleCut={handleCut}

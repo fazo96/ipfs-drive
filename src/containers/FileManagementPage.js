@@ -11,12 +11,22 @@ function FileManagementPage({ loading, path, setPath }) {
   const lastPathItem = path.length > 0 ? path[path.length - 1] : {};
   const isFolder = lastPathItem.folder;
   const ascend = path.length > 1 ? (() => setPath(path.slice(0, path.length - 1))) : null;
-  return (
-    <div>
-      { loading ? <div /> : <FileManagerToolbarContainer /> }
-      { loading ? <LoadingIndicator /> : (isFolder ? <FileManager /> : <SingleFileManager item={lastPathItem} ascend={ascend} />) }
-    </div>
-  );
+  if (loading) {
+    return <LoadingIndicator />;
+  } else if(isFolder) {
+    return <div>
+      <FileManagerToolbarContainer />
+      <FileManager />
+    </div>;
+  } else {
+    return <div>
+      <FileManagerToolbarContainer />
+      <SingleFileManager
+        item={lastPathItem}
+        acend={ascend}
+      />
+    </div>;
+  }
 }
 
 FileManagementPage.propTypes = {

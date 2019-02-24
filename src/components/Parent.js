@@ -1,20 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListItem } from 'material-ui/List';
-import FileFolder from 'material-ui/svg-icons/file/folder';
-import Avatar from 'material-ui/Avatar';
+import {
+  ListItem,
+  ListItemText,
+  Avatar,
+  ListItemAvatar,
+} from '@material-ui/core';
+import FileFolder from '@material-ui/icons/Folder';
 
 const Parent = ({ onClick }) => (
   <ListItem
-    leftAvatar={<Avatar icon={<FileFolder />} />}
-    primaryText=".."
-    secondaryText="Parent"
+    button
     onClick={onClick}
-  />
+  >
+    <ListItemAvatar>
+      <Avatar><FileFolder /></Avatar>
+    </ListItemAvatar>
+    <ListItemText
+      primary=".."
+      secondary="Parent"
+    />
+  </ListItem>
 );
 
 Parent.propTypes = {
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default Parent;

@@ -41,7 +41,7 @@ class FileManager extends React.Component {
     this.setState({ renamingItem });
   }
 
-  rename(newName) {
+  rename = (newName) => {
     const { renamingItem } = this.state;
     this.setState({ renamingItem: null });
     this.props.rename(renamingItem.name, newName);
@@ -79,7 +79,13 @@ class FileManager extends React.Component {
     return (
       <div>
         { folderViewer }
-        <Rename open={renamingItem != null} handleChoose={this.rename.bind(this)} item={renamingItem} />
+        { renamingItem && (
+          <Rename
+            open={Boolean(renamingItem)}
+            handleChoose={this.rename}
+            item={renamingItem}
+          />
+        )}
         <Add open={addModalOpen} handleClose={closeAddModal} handleAdd={add} />
       </div>
     );

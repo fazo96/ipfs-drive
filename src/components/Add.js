@@ -1,10 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import {
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@material-ui/core';
 
 const types = {
   plainText: 'plainText',
@@ -23,27 +30,27 @@ class Add extends React.Component {
     };
   }
 
-  handleChangeType(event, index, value) {
+  handleChangeType = (event) => {
     this.setState({
-      type: value,
+      type: event.target.value,
       content: '',
       hash: '',
     });
   }
 
-  handleChangeName(event) {
+  handleChangeName = (event) => {
     this.setState({ name: event.target.value });
   }
 
-  handleChangeFileContent(event) {
+  handleChangeFileContent = (event) => {
     this.setState({ content: event.target.value });
   }
 
-  handleChangeHash(event) {
+  handleChangeHash = (event) => {
     this.setState({ hash: event.target.value });
   }
 
-  add() {
+  add = () => {
     const obj = { name: this.state.name };
     switch (this.state.type) {
       case types.plainText:
@@ -73,40 +80,49 @@ class Add extends React.Component {
 
   render() {
     const { open, handleClose } = this.props;
-    const actions = [
-      <FlatButton
-        key="cancel"
-        label="Cancel"
-        primary
-        onClick={handleClose}
-      />,
-      <FlatButton
-        key="save"
-        label="Save"
-        primary
-        onClick={this.add.bind(this)}
-      />,
-    ];
 
     return (
       <Dialog
-        title="Add Something"
-        actions={actions}
         modal={false}
         open={open}
         onRequestClose={handleClose}
       >
-        <TextField autoFocus floatingLabelText="Name" name="name" fullWidth value={this.state.name} onChange={this.handleChangeName.bind(this)} />
-        <SelectField
-          floatingLabelText="Type"
-          value={this.state.type}
-          onChange={this.handleChangeType.bind(this)}
-          fullWidth
-        >
-          <MenuItem value={types.fromHash} primaryText="From Hash" />
-          <MenuItem value={types.plainText} primaryText="Plain Text" />
-          <MenuItem value={types.emptyFolder} primaryText="Empty Folder" />
-        </SelectField>
+        <DialogTitle>Add Something</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            fullWidth
+            label="Name"
+            value={this.state.name}
+            onChange={this.handleChangeName.bind(this)}
+          />
+          <Select
+            label="Type"
+            value={this.state.type}
+            onChange={this.handleChangeType}
+            fullWidth
+          >
+            <MenuItem value={types.fromHash}>From Hash</MenuItem>
+            <MenuItem value={types.plainText}>Plain Text</MenuItem>
+            <MenuItem value={types.emptyFolder}>Empty Folder</MenuItem>
+          </Select>
+          <DialogActions>
+            <Button
+              color='primary'
+              key="cancel"
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>,
+            <Button
+              color='primary'
+              key="save"
+              onClick={this.add}
+            >
+              Save
+            </Button>
+          </DialogActions>
+        </DialogContent>
         {this.renderAdditionalFields()}
       </Dialog>
     );

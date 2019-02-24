@@ -1,40 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import Snackbar from 'material-ui/Snackbar';
+import { Snackbar } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { push as pushAction } from 'react-router-redux';
 import TitleBar from '../components/TitleBar';
-import WithTheme from '../components/WithTheme';
 import FileManagementPage from './FileManagementPage';
 import Homepage from './Homepage';
-import { clearNotification } from '../actions/notificationActions';
+import {
+  clearNotification as clearNotificationAction,
+} from '../actions/notificationActions';
 
-class App extends React.Component {
-  render() {
-    const { notification, clearNotification, push } = this.props;
-    return (
-      <WithTheme>
-        <TitleBar onClickBrandIcon={() => push('/')} />
-        <Switch>
-          <Route path="/ipfs/" component={FileManagementPage} />
-          <Route path="/" component={Homepage} />
-        </Switch>
-        <Snackbar
-          open={notification.open}
-          message={notification.message || ''}
-          onRequestClose={clearNotification}
-          autoHideDuration={4000}
-        />
-      </WithTheme>
-    );
-  }
-}
+const App = ({ notification, clearNotification, push }) => {
+  return (
+    <div>
+      <TitleBar onClickBrandIcon={() => push('/')} />
+      <Switch>
+        <Route path="/ipfs/" component={FileManagementPage} />
+        <Route path="/" component={Homepage} />
+      </Switch>
+      <Snackbar
+        open={notification.open}
+        message={notification.message || ''}
+        onClose={clearNotification}
+        autoHideDuration={4000}
+      />
+    </div>
+  );
+};
 
 App.propTypes = {
-  notification: PropTypes.object,
-  clearNotification: PropTypes.func,
-  push: PropTypes.func,
+  notification: PropTypes.shape({
+    open: 'string',
+    message: 'string',
+  }).isRequired,
+  clearNotification: PropTypes.func.isRequired,
+  push: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -45,7 +46,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    clearNotification: () => dispatch(clearNotification()),
+    clearNotification: () => dispatch(clearNotificationAction()),
     push: url => dispatch(pushAction(url)),
   };
 }

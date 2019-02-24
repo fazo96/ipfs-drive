@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import InsertDriveFileIcon from 'material-ui/svg-icons/editor/insert-drive-file';
-import { Card, CardActions, CardHeader } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import Avatar from 'material-ui/Avatar';
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import {
+  Card,
+  CardActions,
+  CardHeader,
+  Button,
+  Avatar,
+} from '@material-ui/core';
 import filesize from 'filesize';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Toggle from './Toggle';
@@ -19,12 +23,12 @@ function SingleFileManager({ item, ascend }) {
       />
       <Toggle showIf={!!hash}>
         <CardActions>
-          <FlatButton label="Open in Gateway" href={`https://ipfs.io/ipfs/${hash}`} />
+          <Button href={`https://ipfs.io/ipfs/${hash}`}>Open in Gateway</Button>
           <CopyToClipboard text={hash}>
-            <FlatButton label="Copy Hash" />
+            <Button>Copy Hash</Button>
           </CopyToClipboard>
           <Toggle showIf={typeof ascend === 'function'}>
-            <FlatButton label="View Parent" onClick={ascend} />
+            <Button onClick={ascend}>View Parent</Button>
           </Toggle>
         </CardActions>
       </Toggle>

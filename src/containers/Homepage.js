@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Card, CardHeader } from 'material-ui/Card';
 import { push as pushAction } from 'react-router-redux';
-import ExploreIcon from 'material-ui/svg-icons/content/archive';
-import HelpIcon from 'material-ui/svg-icons/action/help';
-import Avatar from 'material-ui/Avatar';
-import { List, ListItem } from 'material-ui/List';
-import FileFolderIcon from 'material-ui/svg-icons/file/folder';
-import WarningIcon from 'material-ui/svg-icons/alert/warning';
+import ExploreIcon from '@material-ui/icons/Archive';
+import HelpIcon from '@material-ui/icons/Help';
+import {
+  Card,
+  CardHeader,
+  List,
+  ListItem,
+  Avatar,
+  ListItemText,
+} from '@material-ui/core';
+import FileFolderIcon from '@material-ui/icons/Folder';
+import WarningIcon from '@material-ui/icons/Warning';
 import GitHubIcon from '../components/GitHubIcon';
 import { loadRootHash } from '../actions/pathActions';
 
@@ -18,35 +23,55 @@ function Homepage({ push }) {
       <Card style={{ margin: '2em auto', maxWidth: '35em' }}>
         <CardHeader
           title="Welcome to IPFS Drive"
-          subtitle="An in-browser file manager for IPFS"
-          avatar={<Avatar icon={<ExploreIcon />} />}
+          subheader="An in-browser file manager for IPFS"
+          avatar={<Avatar><ExploreIcon /></Avatar>}
         />
         <List>
           <ListItem
-            leftIcon={<HelpIcon />}
+            button
             href="https://ipfs.io"
-            primaryText="Learn more about IPFS"
-            secondaryText="Knowing IPFS will let you take advantage of our best features"
-          />
+          >
+            <Avatar><HelpIcon /></Avatar>
+            <ListItemText
+              primary="Learn more about IPFS"
+              secondary="Knowing IPFS will let you take advantage of our best features"
+            />
+          </ListItem>
           <ListItem
-            leftIcon={<FileFolderIcon />}
+            button
             onClick={() => push(`/ipfs/${loadRootHash()}`)}
-            primaryText="Open Empty Folder"
-            secondaryText="Start using Drive right now"
-          />
+          >
+            <Avatar><FileFolderIcon /></Avatar>
+            <ListItemText
+              primary="Open Empty Folder"
+              secondary="Start using Drive right now"
+            />
+          </ListItem>
           <ListItem
-            leftIcon={<GitHubIcon />}
+            button
             href="https://github.com/fazo96/ipfs-drive"
-            primaryText="Follow development on GitHub"
-            secondaryText="Join the discussion and help us shape Drive"
-          />
+          >
+            <Avatar><GitHubIcon /></Avatar>
+            <ListItemText
+              primary="Follow development on GitHub"
+              secondary="Join the discussion and help us shape Drive"
+            />
+          </ListItem>
           <ListItem
-            leftIcon={<WarningIcon />}
+            button
             href="https://github.com/fazo96/ipfs-drive/issues/new"
-            primaryText="Warning!"
-            secondaryText="This is a development version, there are missing features and bugs. Let us know on GitHub if you run into any issues"
-            secondaryTextLines={2}
-          />
+          >
+            <Avatar><WarningIcon /></Avatar>
+            <ListItemText
+              primary="Warning!"
+              secondary={
+                <span>
+                  This is a development version, there are missing features and bugs.
+                  <br/>Let us know on GitHub if you run into any issues
+                </span>
+              }
+            />
+          </ListItem>
         </List>
       </Card>
     </div>
@@ -54,7 +79,7 @@ function Homepage({ push }) {
 }
 
 Homepage.propTypes = {
-  push: PropTypes.func,
+  push: PropTypes.func.isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
