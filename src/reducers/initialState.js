@@ -1,15 +1,15 @@
 export default {
   addModal: {
-    open: false
+    open: false,
   },
   currentOperation: {
-    active: true
+    active: true,
   },
   notification: {
     open: false,
-    message: null
+    message: null,
   },
   files: [],
   clipboard: null,
-  path: []
+  path: [],
 };

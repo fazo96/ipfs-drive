@@ -1,3 +1,10 @@
+# v0.2.0 (unreleased)
+
+- upgraded from Material UI 0.20 to Material UI 3.x
+- upgraded build system and most libraries used
+- upgraded from IPFS 0.27 to IPFS 0.34
+- added support for IPFS Companion's window.ipfs feature
+
 # v0.1.0
 
 [Try it](https://ipfs.io/ipfs/QmULwT1X6BTZdKprR7Q32BrtznGtaHwEzUxJfaVfQaAySe)

@@ -1,68 +1,107 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListItem } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
 import filesize from 'filesize';
+import {
+  IconButton,
+  ListItem,
+  Avatar,
+  ListItemText,
+  ListItemSecondaryAction,
+} from '@material-ui/core';
+import FileFolderIcon from '@material-ui/icons/Folder';
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import SettingsIcon from '@material-ui/icons/Settings';
+import WarningIcon from '@material-ui/icons/Warning';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import FolderItemMenu from './FolderItemMenu';
 
-import IconButton from 'material-ui/IconButton';
-import FileFolderIcon from 'material-ui/svg-icons/file/folder';
-import InsertDriveFileIcon from 'material-ui/svg-icons/editor/insert-drive-file';
-import SettingsIcon from 'material-ui/svg-icons/action/settings';
-import WarningIcon from 'material-ui/svg-icons/alert/warning';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import CopyIcon from 'material-ui/svg-icons/content/content-copy';
-import CutIcon from 'material-ui/svg-icons/content/content-cut';
-import DeleteIcon from 'material-ui/svg-icons/action/delete';
-import ShareIcon from 'material-ui/svg-icons/social/share';
-import RenameIcon from 'material-ui/svg-icons/editor/short-text';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import Divider from 'material-ui/Divider';
-import CopyToClipboard from 'react-copy-to-clipboard';
+class FolderItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.menuButton = React.createRef();
+  }
 
-const iconButtonElement = (
-  <IconButton
-    touch={true}
-    tooltip="Edit"
-    tooltipPosition="bottom-left"
-  >
-    <MoreVertIcon />
-  </IconButton>
-);
+  state = {
+    menuAnchorEl: null,
+  }
 
-const FolderItem = ({ item, onClick, handleCut, handleCopy, handleRemove, handleShare, handleRename }) => {
-  const url = window.location.href + '/' + encodeURIComponent(item.name || '');
-  const analyzed = item.size > 0 && typeof item.folder === 'boolean';
-  const analyzing = !analyzed && item.analyzing;
-  const leftIcon = analyzed ? (item.folder ? <FileFolderIcon /> : <InsertDriveFileIcon />) : (analyzing ? <SettingsIcon /> : <WarningIcon/>);
-  const secondaryText = analyzed ? 'Size: ' + filesize(item.size) : (analyzing ? 'Searching IPFS...' : 'Metadata not available');
-  const rightIconButton = (<IconMenu iconButtonElement={iconButtonElement}>
-    <CopyToClipboard text={url} onClick={() => handleShare(item)}>
-      <MenuItem primaryText="Share URL" leftIcon={<ShareIcon />} onClick={() => handleShare(item)}/>
-    </CopyToClipboard>
-    <Divider />
-    <MenuItem primaryText="Rename" leftIcon={<RenameIcon />} onClick={() => handleRename(item)}/>
-    <MenuItem primaryText="Cut" leftIcon={<CutIcon />} onClick={() => handleCut(item)}/>
-    <MenuItem primaryText="Copy" leftIcon={<CopyIcon />} onClick={() => handleCopy(item)}/>
-    <MenuItem primaryText="Delete" leftIcon={<DeleteIcon />} onClick={() => handleRemove(item)}/>
-  </IconMenu>);
-  return (<ListItem
-    leftAvatar={<Avatar icon={leftIcon} />}
-    rightIconButton={rightIconButton}
-    primaryText={item.name || '(No Name)'}
-    secondaryText={secondaryText}
-    onClick={() => onClick(item)}
-  />);
-};
+  onMenuButtonClick = (event) => {
+    const { menuAnchorEl } = this.state;
+    this.setState({
+      menuAnchorEl: menuAnchorEl ? null : event.currentTarget,
+    });
+  }
+
+  closeMenu = () => {
+    this.setState({ menuAnchorEl: null });
+  }
+
+  render() {
+    const {
+      item,
+      onClick,
+      handleCut,
+      handleCopy,
+      handleRemove,
+      handleShare,
+      handleRename,
+    } = this.props;
+    const menuProps = {
+      handleCut,
+      handleCopy,
+      handleRemove,
+      handleRename,
+      handleShare,
+    };
+    const { menuAnchorEl } = this.state;
+    const analyzed = item.size > 0 && typeof item.folder === 'boolean';
+    const analyzing = !analyzed && item.analyzing;
+    let leftIcon = <WarningIcon />;
+    let secondary = 'Metadata not available';
+    if (analyzed) {
+      leftIcon = item.folder ? <FileFolderIcon /> : <InsertDriveFileIcon />;
+      secondary = `Size: ${filesize(item.size)}`;
+    } else if (analyzing) {
+      leftIcon = <SettingsIcon />;
+      secondary = 'Searching IPFS...';
+    }
+    return (
+      <ListItem
+        button
+        onClick={() => onClick(item)}
+      >
+        <Avatar>{leftIcon}</Avatar>
+        <ListItemText
+          primary={item.name || '(No Name)'}
+          secondary={secondary}
+        />
+        <ListItemSecondaryAction>
+          <IconButton
+            onClick={this.onMenuButtonClick}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <FolderItemMenu
+            item={item}
+            open={Boolean(menuAnchorEl)}
+            onClose={this.closeMenu}
+            anchorEl={menuAnchorEl}
+            {...menuProps}
+          />
+        </ListItemSecondaryAction>
+      </ListItem>
+    );
+  }
+}
 
 FolderItem.propTypes = {
-  item: PropTypes.object,
-  onClick: PropTypes.func,
-  handleCut: PropTypes.func,
-  handleCopy: PropTypes.func,
-  handleRemove: PropTypes.func,
-  handleShare: PropTypes.func,
-  handleRename: PropTypes.func
+  item: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+  handleCut: PropTypes.func.isRequired,
+  handleCopy: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  handleShare: PropTypes.func.isRequired,
+  handleRename: PropTypes.func.isRequired,
 };
 
 export default FolderItem;

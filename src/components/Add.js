@@ -1,120 +1,189 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import {
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@material-ui/core';
 
 const types = {
   plainText: 'plainText',
   fromHash: 'fromHash',
-  emptyFolder: 'emptyFolder'
+  emptyFolder: 'emptyFolder',
 };
 
-class Add extends React.Component {
-  constructor (props) {
+const defaultFormValues = {
+  name: '',
+  content: '',
+  hash: '',
+  type: types.fromHash,
+};
+
+class Add extends React.PureComponent {
+  constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      content: '',
-      hash: '',
-      type: types.fromHash
+      ...defaultFormValues,
     };
   }
 
-  handleChangeType(event, index, value) {
+  reset = () => {
+    this.setState(defaultFormValues);
+  }
+
+  handleChangeType = (event) => {
     this.setState({
-      type: value,
+      type: event.target.value,
       content: '',
-      hash: ''
+      hash: '',
     });
   }
 
-  handleChangeName(event) {
+  handleChangeName = (event) => {
     this.setState({ name: event.target.value });
   }
 
-  handleChangeFileContent(event) {
+  handleChangeFileContent = (event) => {
     this.setState({ content: event.target.value });
   }
 
-  handleChangeHash(event) {
+  handleChangeHash = (event) => {
     this.setState({ hash: event.target.value });
   }
 
-  add() {
-    let obj = { name: this.state.name };
-    switch (this.state.type) {
+  add = () => {
+    const { handleAdd } = this.props;
+    const {
+      name,
+      type,
+      content,
+      hash,
+    } = this.state;
+    const obj = { name };
+    switch (type) {
       case types.plainText:
-        obj.content = this.state.content;
+        obj.content = content;
         break;
       case types.fromHash:
-        obj.hash = this.state.hash;
+        obj.hash = hash;
         break;
       case types.emptyFolder: break;
       default:
         return;
     }
     this.setState({ hash: '', content: '' });
-    this.props.handleAdd(obj);
+    handleAdd(obj);
+  }
+
+  handleClose = () => {
+    const { handleClose } = this.props;
+    handleClose();
+    this.reset();
   }
 
   renderAdditionalFields() {
-    switch (this.state.type) {
+    const { type, hash, content } = this.state;
+    switch (type) {
       case types.plainText:
-        return <TextField floatingLabelText="Content (Text)" name="content" fullWidth={true} rows={3} value={this.state.content} onChange={this.handleChangeFileContent.bind(this)}/>;
+        return (
+          <TextField
+            label="Content (Text)"
+            name="content"
+            fullWidth
+            rows={3}
+            value={content}
+            onChange={this.handleChangeFileContent}
+          />
+        );
       case types.fromHash:
-        return <TextField floatingLabelText="Multihash" name="multihash" fullWidth={true} value={this.state.hash} onChange={this.handleChangeHash.bind(this)}/>;
+        return (
+          <TextField
+            label="Multihash"
+            fullWidth
+            value={hash}
+            onChange={this.handleChangeHash}
+          />
+        );
       default:
-        return <div/>;
+        return <div />;
     }
   }
 
-  render () {
-    const {open, handleClose} = this.props;
-    const actions = [
-      <FlatButton
-        key="cancel"
-        label="Cancel"
-        primary={true}
-        onClick={handleClose}
-      />,
-      <FlatButton
-        key="save"
-        label="Save"
-        primary={true}
-        onClick={this.add.bind(this)}
-      />,
-    ];
+  render() {
+    const { open, handleClose } = this.props;
+    const {
+      name,
+      type,
+      content,
+      hash,
+    } = this.state;
+    const canSave = typeof name === 'string'
+      && name.length > 0
+      && Object.values(types).indexOf(type) >= 0
+      && (
+        type === types.emptyFolder
+        || (type === types.plainText && Boolean(content))
+        || (type === types.fromHash && Boolean(hash))
+      );
 
-    return (<Dialog
-      title="Add Something"
-      actions={actions}
-      modal={false}
-      open={open}
-      onRequestClose={handleClose}
-    >
-      <TextField autoFocus floatingLabelText="Name" name="name" fullWidth={true} value={this.state.name} onChange={this.handleChangeName.bind(this)}/>
-      <SelectField
-        floatingLabelText="Type"
-        value={this.state.type}
-        onChange={this.handleChangeType.bind(this)}
-        fullWidth={true}
+    return (
+      <Dialog
+        modal={false}
+        open={open}
+        onClose={handleClose}
       >
-        <MenuItem value={types.fromHash} primaryText="From Hash" />
-        <MenuItem value={types.plainText} primaryText="Plain Text" />
-        <MenuItem value={types.emptyFolder} primaryText="Empty Folder" />
-      </SelectField>
-      {this.renderAdditionalFields()}
-    </Dialog>);
+        <DialogTitle>Add Something</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            fullWidth
+            label="Name"
+            value={name}
+            onChange={this.handleChangeName}
+          />
+          <Select
+            label="Type"
+            value={type}
+            onChange={this.handleChangeType}
+            fullWidth
+          >
+            <MenuItem value={types.fromHash}>From Hash</MenuItem>
+            <MenuItem value={types.plainText}>Plain Text</MenuItem>
+            <MenuItem value={types.emptyFolder}>Empty Folder</MenuItem>
+          </Select>
+          {this.renderAdditionalFields()}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={this.handleClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!canSave}
+            onClick={this.add}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
   }
 }
 
 Add.propTypes = {
-  handleClose: PropTypes.func,
-  handleAdd: PropTypes.func,
-  open: PropTypes.bool
+  handleClose: PropTypes.func.isRequired,
+  handleAdd: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
 };
 
 export default Add;

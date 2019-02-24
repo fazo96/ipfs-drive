@@ -2,38 +2,47 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Toolbar,
-  ToolbarGroup,
-  ToolbarTitle
-} from 'material-ui/Toolbar';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import ContentPaste from 'material-ui/svg-icons/content/content-paste';
-import Toggle from './Toggle';
+  Button,
+} from '@material-ui/core';
+import ContentPaste from '@material-ui/icons/ClosedCaption';
 import filesize from 'filesize';
+import Toggle from './Toggle';
 
-const FileManagerToolbar = props => {
+const FileManagerToolbar = (props) => {
   const {
     openAddModal,
     clipboardItem,
     handlePaste,
     handleClear,
-    size
+    size,
   } = props;
   const sizeText = size > 0 ? filesize(size) : '...';
-  return (<Toolbar>
-    <ToolbarGroup firstChild={true}>
-      <ToolbarTitle text={sizeText} style={{marginLeft: '22px'}}/>
-    </ToolbarGroup>
-    <ToolbarGroup lastChild={true}>
-      <Toggle showIf={clipboardItem !== null}>
-        <RaisedButton label="Paste" secondary={true} onClick={() => handlePaste(clipboardItem)} icon={<ContentPaste />}/>
-      </Toggle>
-      <Toggle showIf={size > 4}>
-        <FlatButton label="Clear" onClick={handleClear} />
-      </Toggle>
-      <RaisedButton label="Add" primary={true} onClick={openAddModal}/>
-    </ToolbarGroup>
-  </Toolbar>);
+  return (
+    <Toolbar>
+      <div style={{ marginLeft: '22px' }}>
+        {sizeText}
+      </div>
+      <div style={{ marginLeft: 'auto' }}>
+        <Toggle showIf={clipboardItem !== null}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => handlePaste(clipboardItem)}
+            icon={<ContentPaste />}
+          >
+            <ContentPaste />
+            Paste
+          </Button>
+        </Toggle>
+        <Toggle showIf={size > 4}>
+          <Button onClick={handleClear}>
+            Clear
+          </Button>
+        </Toggle>
+        <Button variant="contained" onClick={openAddModal}>Add</Button>
+      </div>
+    </Toolbar>
+  );
 };
 
 FileManagerToolbar.propTypes = {
@@ -41,7 +50,7 @@ FileManagerToolbar.propTypes = {
   size: PropTypes.number,
   clipboardItem: PropTypes.object,
   handlePaste: PropTypes.func,
-  handleClear: PropTypes.func
+  handleClear: PropTypes.func,
 };
 
 export default FileManagerToolbar;

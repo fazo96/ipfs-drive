@@ -7,7 +7,7 @@ import { paste } from '../actions/folderItemActions';
 import { setPath, emptyHash } from '../actions/pathActions';
 
 const FileManagerToolbarContainer = (props) => {
-  const size = props.path.length < 1 ? 0 : props.path[props.path.length-1].size;
+  const size = props.path.length < 1 ? 0 : props.path[props.path.length - 1].size;
   return <FileManagerToolBar {...props} size={size || 0} />;
 };
 
@@ -16,25 +16,25 @@ FileManagerToolbarContainer.propTypes = {
   path: PropTypes.arrayOf(PropTypes.object),
   openAddModal: PropTypes.func,
   clipboardItem: PropTypes.object,
-  handlePaste: PropTypes.func
+  handlePaste: PropTypes.func,
 };
 
 function mapStateToProps(state) {
   return {
     path: state.path,
-    clipboardItem: state.clipboard
+    clipboardItem: state.clipboard,
   };
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return {
     openAddModal: () => dispatch(openModal()),
     handlePaste: item => dispatch(paste(item)),
-    handleClear: () => dispatch(setPath('/ipfs/' + emptyHash))
+    handleClear: () => dispatch(setPath(`/ipfs/${emptyHash}`)),
   };
 }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(FileManagerToolbarContainer);

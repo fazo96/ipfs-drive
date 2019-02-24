@@ -1,21 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List } from 'material-ui/List';
+import { List } from '@material-ui/core';
 import FolderItem from './FolderItem';
 import Parent from './Parent';
 import EmptyItem from './EmptyItem';
 
 const containerStyle = {
   display: 'flex',
-  justifyContent: 'center'
+  justifyContent: 'center',
 };
 
 const itemStyle = {
   maxWidth: '35em',
-  width: '100%'
+  width: '100%',
 };
 
-const FolderViewer = props => {
+const FolderViewer = (props) => {
   const {
     items,
     showParent,
@@ -26,18 +26,29 @@ const FolderViewer = props => {
     handleRemove,
     handleRename,
     handleNewItem,
-    handleShare
+    handleShare,
   } = props;
-  return (<div style={containerStyle}><List style={itemStyle}>
-    { showParent ? <Parent onClick={handleAscend} style={itemStyle} /> : <span/> }
-    { items.map((f, i) => (<FolderItem
-      item={f} key={i} onClick={onClickItem} handleShare={handleShare}
-      handleCut={handleCut} handleCopy={handleCopy}
-      handleRemove={handleRemove} handleRename={handleRename}
-      />))
+  return (
+    <div style={containerStyle}>
+      <List style={itemStyle}>
+        { showParent ? <Parent onClick={handleAscend} style={itemStyle} /> : <span /> }
+        { items.map(f => (
+          <FolderItem
+            item={f}
+            key={f.hash}
+            onClick={onClickItem}
+            handleShare={handleShare}
+            handleCut={handleCut}
+            handleCopy={handleCopy}
+            handleRemove={handleRemove}
+            handleRename={handleRename}
+          />
+        ))
     }
-    { items.length === 0 && !showParent ? <EmptyItem style={itemStyle} onClick={handleNewItem}/> : <span/> }
-  </List></div>);
+        { items.length === 0 && !showParent ? <EmptyItem style={itemStyle} onClick={handleNewItem} /> : <span /> }
+      </List>
+    </div>
+  );
 };
 
 FolderViewer.propTypes = {
@@ -51,7 +62,7 @@ FolderViewer.propTypes = {
   handleRemove: PropTypes.func,
   handleRename: PropTypes.func,
   handleNewItem: PropTypes.func,
-  handleShare: PropTypes.func
+  handleShare: PropTypes.func,
 };
 
 export default FolderViewer;

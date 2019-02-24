@@ -1,10 +1,10 @@
-import {createStore, compose, applyMiddleware} from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import createSagaMiddleware from 'redux-saga';
-import saga from '../sagas';
 import createHistory from 'history/createHashHistory';
 // 'routerMiddleware': the new way of storing route changes with redux middleware since rrV4.
 import { routerMiddleware } from 'react-router-redux';
+import saga from '../sagas';
 import rootReducer from '../reducers';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -19,9 +19,8 @@ function configureStoreProd(initialState) {
   ];
 
   const store = createStore(rootReducer, initialState, compose(
-    applyMiddleware(...middlewares)
-    )
-  );
+    applyMiddleware(...middlewares),
+  ));
 
   sagaMiddleware.run(saga);
 
@@ -39,9 +38,8 @@ function configureStoreDev(initialState) {
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
   const store = createStore(rootReducer, initialState, composeEnhancers(
-    applyMiddleware(...middlewares)
-    )
-  );
+    applyMiddleware(...middlewares),
+  ));
 
   let sagaTask = sagaMiddleware.run(saga);
 

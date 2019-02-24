@@ -28,5 +28,4 @@ describe('Clipboard reducer', () => {
     const expected = null;
     expect(clipboardReducer(state, action)).toEqual(expected);
   });
-
 });

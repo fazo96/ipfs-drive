@@ -1,38 +1,55 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import InsertDriveFileIcon from 'material-ui/svg-icons/editor/insert-drive-file';
-import { Card, CardActions, CardHeader } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import Avatar from 'material-ui/Avatar';
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import {
+  Card,
+  CardActions,
+  CardHeader,
+  Button,
+  Avatar,
+} from '@material-ui/core';
 import filesize from 'filesize';
-import Toggle from './Toggle';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import Toggle from './Toggle';
 
-function SingleFileManager({ item, ascend }) {
+function SingleFileManager({ item, ascend, handleShare }) {
   const { name, size, hash } = item;
-  return (<Card style={{ margin: '2em auto', maxWidth: '30em' }}>
-    <CardHeader
-      title={name || 'Unnamed File'}
-      subtitle={'Size: ' + filesize(size || 0)}
-      avatar={<Avatar icon={<InsertDriveFileIcon />}/>}
-    />
-    <Toggle showIf={!!hash}>
-      <CardActions>
-        <FlatButton label="Open in Gateway" href={'https://ipfs.io/ipfs/' + hash}/>
-        <CopyToClipboard text={hash}>
-          <FlatButton label="Copy Hash"/>
-        </CopyToClipboard>
-        <Toggle showIf={typeof ascend === 'function'}>
-          <FlatButton label="View Parent" onClick={ascend} />
-        </Toggle>
-      </CardActions>
-    </Toggle>
-  </Card>);
+  return (
+    <Card style={{ margin: '2em auto', maxWidth: '30em' }}>
+      <CardHeader
+        title={name || 'Unnamed File'}
+        subheader={`Size: ${filesize(size || 0)}`}
+        avatar={<Avatar><InsertDriveFileIcon /></Avatar>}
+      />
+      <Toggle showIf={!!hash}>
+        <CardActions>
+          <Button
+            component="a"
+            target="_vblank"
+            href={`https://ipfs.io/ipfs/${hash}`}
+          >
+            Open in Gateway
+          </Button>
+          <CopyToClipboard text={hash}>
+            <Button onClick={() => handleShare(item)}>Copy Hash</Button>
+          </CopyToClipboard>
+          <Toggle showIf={typeof ascend === 'function'}>
+            <Button onClick={ascend}>View Parent</Button>
+          </Toggle>
+        </CardActions>
+      </Toggle>
+    </Card>
+  );
 }
+
+SingleFileManager.defaultProps = {
+  ascend: null,
+};
 
 SingleFileManager.propTypes = {
   item: PropTypes.object.isRequired,
-  ascend: PropTypes.func
+  handleShare: PropTypes.func.isRequired,
+  ascend: PropTypes.func,
 };
 
 export default SingleFileManager;

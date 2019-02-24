@@ -1,5 +1,5 @@
-import { pathToString } from '../utils/path';
 import { push } from 'react-router-redux';
+import { pathToString } from '../utils/path';
 import { UPDATE_PATH_INFO } from '../constants/actionTypes';
 
 export function setPath(path) {
@@ -10,7 +10,7 @@ export function setPath(path) {
 export function updatePathInfo(path) {
   return {
     type: UPDATE_PATH_INFO,
-    path
+    path,
   };
 }
 

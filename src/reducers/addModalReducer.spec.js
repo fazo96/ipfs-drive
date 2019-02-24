@@ -28,5 +28,4 @@ describe('Add Modal reducer', () => {
     const expected = { open: false };
     expect(addModalReducer(state, action)).toEqual(expected);
   });
-
 });

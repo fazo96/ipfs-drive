@@ -1,56 +1,55 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import TitleBar from '../components/TitleBar';
-import WithTheme from '../components/WithTheme';
-import FileManagementPage from "./FileManagementPage";
-import Homepage from "./Homepage";
-import Snackbar from 'material-ui/Snackbar';
-import { clearNotification } from '../actions/notificationActions';
+import { Snackbar } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { push as pushAction } from 'react-router-redux';
+import TitleBar from '../components/TitleBar';
+import FileManagementPage from './FileManagementPage';
+import Homepage from './Homepage';
+import {
+  clearNotification as clearNotificationAction,
+} from '../actions/notificationActions';
 
-class App extends React.Component {
-  render() {
-    const { notification, clearNotification, push } = this.props;
-    return (
-      <WithTheme>
-        <TitleBar onClickBrandIcon={() => push('/')}/>
-        <Switch>
-          <Route path="/ipfs/" component={FileManagementPage} />
-          <Route path="/" component={Homepage} />
-        </Switch>
-        <Snackbar
-          open={notification.open}
-          message={notification.message || ''}
-          onRequestClose={clearNotification}
-          autoHideDuration={4000}
-        />
-      </WithTheme>
-    );
-  }
-}
+const App = ({ notification, clearNotification, push }) => (
+  <div>
+    <TitleBar onClickBrandIcon={() => push('/')} />
+    <Switch>
+      <Route path="/ipfs/" component={FileManagementPage} />
+      <Route path="/" component={Homepage} />
+    </Switch>
+    <Snackbar
+      open={notification.open}
+      message={notification.message || ''}
+      onClose={clearNotification}
+      autoHideDuration={4000}
+    />
+  </div>
+);
 
 App.propTypes = {
-  notification: PropTypes.object,
-  clearNotification: PropTypes.func,
-  push: PropTypes.func
+  notification: PropTypes.shape({
+    open: PropTypes.bool,
+    message: PropTypes.string,
+  }).isRequired,
+  clearNotification: PropTypes.func.isRequired,
+  push: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
-    notification: state.notification
+    notification: state.notification,
   };
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return {
-    clearNotification: () => dispatch(clearNotification()),
-    push: url => dispatch(pushAction(url))
+    clearNotification: () => dispatch(clearNotificationAction()),
+    push: url => dispatch(pushAction(url)),
   };
 }
 
 export default withRouter(connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(App));

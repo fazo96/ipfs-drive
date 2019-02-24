@@ -1,5 +1,5 @@
-export function updateSingleItem(existingLinks, analysis){
-  return existingLinks.map(f => {
+export function updateSingleItem(existingLinks, analysis) {
+  return existingLinks.map((f) => {
     if (f.hash === analysis.hash) {
       return Object.assign({}, f, analysis);
     }
@@ -7,8 +7,6 @@ export function updateSingleItem(existingLinks, analysis){
   });
 }
 
-export function updateWholeArray(existing, newInfo){
-  return existing.map((f, i) => {
-      return Object.assign({}, f, newInfo[i]);
-  });
+export function updateWholeArray(existing, newInfo) {
+  return existing.map((f, i) => Object.assign({}, f, newInfo[i]));
 }

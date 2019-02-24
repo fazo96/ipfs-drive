@@ -1,22 +1,18 @@
 import React from 'react';
-import RefreshIndicator from 'material-ui/RefreshIndicator';
+import { CircularProgress } from '@material-ui/core';
 
 const LoadingIndicator = () => {
   const containerStyle = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '1em'
+    paddingTop: '1em',
   };
-  return (<div style={containerStyle}>
-    <RefreshIndicator
-        size={50}
-        left={0}
-        top={0}
-        status="loading"
-        style={{ display: 'block', position: 'relative'}}
-      />
-  </div>);
+  return (
+    <div style={containerStyle}>
+      <CircularProgress size={50} />
+    </div>
+  );
 };
 
 export default LoadingIndicator;

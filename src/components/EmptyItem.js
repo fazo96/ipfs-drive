@@ -1,20 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListItem } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
-import EmptyIcon from 'material-ui/svg-icons/alert/error';
+import {
+  ListItem,
+  Avatar,
+  ListItemText,
+} from '@material-ui/core';
+import EmptyIcon from '@material-ui/icons/Error';
 
-const EmptyItem = ({ onClick }) => {
-  return (<ListItem
-    leftAvatar={<Avatar icon={<EmptyIcon/>} />}
-    primaryText="There's nothing here"
-    secondaryText="Try adding something new"
+const EmptyItem = ({ onClick }) => (
+  <ListItem
+    button
     onClick={onClick}
-  />);
-};
+  >
+    <Avatar><EmptyIcon /></Avatar>
+    <ListItemText
+      primary="There's nothing here"
+      secondary="Try adding something new"
+    />
+  </ListItem>
+);
 
 EmptyItem.propTypes = {
-  onClick: PropTypes.func
+  onClick: PropTypes.func.isRequired,
 };
 
 export default EmptyItem;
