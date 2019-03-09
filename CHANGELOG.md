@@ -1,4 +1,6 @@
-# v0.2.0 (unreleased)
+# v0.2.0
+
+[Try it](https://ipfs.io/ipfs/QmbbKTkTh87AhtwWG24b4KSSwBwbHCLrSVnumuoS1usUoy)
 
 - upgraded from Material UI 0.20 to Material UI 3.x
 - upgraded build system and most libraries used
